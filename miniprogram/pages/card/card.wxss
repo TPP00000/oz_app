@@ -1,0 +1,136 @@
+/* pages/card/card.wxss */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.card-page {
+  padding: 48rpx 40rpx 80rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+.head-fruit {
+  width: 110rpx;
+}
+
+.fruit-glow {
+  animation: card-glow 1.6s ease-in-out infinite;
+}
+
+@keyframes card-glow {
+  0%, 100% { filter: drop-shadow(0 0 8rpx rgba(255, 205, 100, 0.9)); }
+  50% { filter: drop-shadow(0 0 28rpx rgba(255, 190, 70, 1)); }
+}
+
+.fruit-unripe {
+  opacity: 0.55;
+  filter: saturate(0.55);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.head-emoji {
+  font-size: 88rpx;
+}
+
+.head-title {
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.head-sub {
+  font-size: 26rpx;
+  color: var(--color-text-sub);
+}
+
+.input-area {
+  width: 100%;
+  min-height: 220rpx;
+  font-size: 30rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.counter {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: var(--color-text-sub);
+}
+
+/* 预设问题 */
+.suggest {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.suggest-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: var(--color-text-sub);
+}
+
+.refresh {
+  color: var(--color-primary-deep);
+}
+
+.suggest-chip {
+  background: #FFF0F4;
+  border-radius: 24rpx;
+  padding: 20rpx 28rpx;
+  font-size: 26rpx;
+  color: var(--color-primary-deep);
+  line-height: 1.5;
+}
+
+.suggest-chip:active {
+  opacity: 0.7;
+}
+
+/* 问答气泡 */
+.bubble {
+  border-radius: 32rpx;
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.bubble-q {
+  background: #FFF0F4;
+  border-top-left-radius: 8rpx;
+}
+
+.bubble-a {
+  background: #EDF7EE;
+  border-top-right-radius: 8rpx;
+  align-self: flex-end;
+  width: 88%;
+  box-sizing: border-box;
+}
+
+.bubble-label {
+  font-size: 22rpx;
+  color: var(--color-text-sub);
+}
+
+.bubble-text {
+  font-size: 30rpx;
+  line-height: 1.7;
+}
+
+.submit {
+  margin-top: 16rpx;
+}

@@ -1,0 +1,30 @@
+<!--pages/index/index.wxml - 茄茄小屋主页-->
+<view class="page-loading" wx:if="{{loading}}">小屋开门中…</view>
+
+<view class="page-loading" wx:elif="{{loadFailed}}">
+  <view class="retry-box">
+    <text>小屋暂时打不开</text>
+    <view class="btn-ghost retry-btn" bindtap="onRetry">再试一次</view>
+  </view>
+</view>
+
+<view class="home" wx:else>
+  <image class="room-bg" src="/assets/room-day.jpg" mode="aspectFill" />
+
+  <view class="header-chip">
+    <text class="title">茄茄小屋</text>
+    <text class="subtitle">在一起的第 {{daysTogether}} 天 💗</text>
+  </view>
+
+  <!-- 桌上的愿望树：呼吸动画提示可点击，按下有放大反馈 -->
+  <view
+    class="tree-hotspot"
+    hover-class="tree-pressed"
+    hover-stay-time="160"
+    bindtap="goTree"
+  >
+    <image class="tree-img" src="/assets/tree-day.png" mode="widthFix" />
+    <view class="badge" wx:if="{{pendingForMe > 0}}">{{pendingForMe}} 颗果子等你回答</view>
+    <view class="hint" wx:else>点一点愿望树</view>
+  </view>
+</view>

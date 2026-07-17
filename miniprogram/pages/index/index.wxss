@@ -1,0 +1,111 @@
+/* pages/index/index.wxss */
+.home {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.room-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 标题浮层 */
+.header-chip {
+  position: absolute;
+  top: 36rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 252, 246, 0.82);
+  border-radius: 32rpx;
+  padding: 20rpx 52rpx;
+  box-shadow: 0 8rpx 28rpx rgba(120, 90, 60, 0.16);
+  backdrop-filter: blur(6rpx);
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 800;
+  letter-spacing: 4rpx;
+}
+
+.subtitle {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: var(--color-text-sub);
+}
+
+/* 愿望树热区 */
+.tree-hotspot {
+  position: absolute;
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+  width: 320rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tree-img {
+  width: 100%;
+  transform-origin: 50% 100%;
+  animation: breathe 3.6s ease-in-out infinite;
+  filter: drop-shadow(0 10rpx 24rpx rgba(120, 90, 60, 0.35));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1) rotate(-0.6deg); }
+  50% { transform: scale(1.035) rotate(0.6deg); }
+}
+
+/* 按下反馈：放大 + 发光 */
+.tree-pressed .tree-img {
+  transform: scale(1.12);
+  animation-play-state: paused;
+  filter: drop-shadow(0 0 36rpx rgba(255, 214, 130, 0.95));
+}
+
+.badge {
+  margin-top: 8rpx;
+  background: var(--color-gold);
+  color: #fff;
+  font-size: 24rpx;
+  padding: 10rpx 28rpx;
+  border-radius: 30rpx;
+  box-shadow: 0 6rpx 16rpx rgba(245, 185, 78, 0.45);
+  animation: bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8rpx); }
+}
+
+.hint {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #6b5a4e;
+  background: rgba(255, 252, 246, 0.82);
+  padding: 8rpx 26rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(120, 90, 60, 0.12);
+}
+
+.retry-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.retry-btn {
+  padding: 12rpx 48rpx;
+}

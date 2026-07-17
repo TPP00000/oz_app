@@ -1,0 +1,12 @@
+{
+  "name": "wishtree",
+  "version": "1.0.0",
+  "description": "恋恋小屋 - 愿望树云函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test \"test/*.test.js\""
+  },
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

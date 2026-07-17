@@ -1,0 +1,99 @@
+<!--pages/card/card.wxml - 问答卡片页-->
+<image class="page-bg" src="/assets/card-paper.jpg" mode="aspectFill" />
+
+<view class="page-loading" wx:if="{{mode === 'loading'}}">果子打开中…</view>
+
+<!-- 出题模式 -->
+<view class="card-page" wx:elif="{{mode === 'create'}}">
+  <view class="head">
+    <text class="head-emoji">🌱</text>
+    <text class="head-title">种一个问题</text>
+    <text class="head-sub">写下你想问 TA 的，等 TA 回答后果子就成熟啦</text>
+  </view>
+
+  <view class="card">
+    <textarea
+      class="input-area"
+      placeholder="想问 TA 什么呢…"
+      maxlength="{{questionMax}}"
+      value="{{questionInput}}"
+      bindinput="onQuestionInput"
+    />
+    <text class="counter">{{questionInput.length}}/{{questionMax}}</text>
+  </view>
+
+  <view class="suggest">
+    <view class="suggest-head">
+      <text>不知道问什么？试试这些</text>
+      <text class="refresh" bindtap="onRefreshSuggestions">🔄 换一换</text>
+    </view>
+    <view
+      wx:for="{{suggestions}}"
+      wx:key="*this"
+      class="suggest-chip"
+      data-q="{{item}}"
+      bindtap="onPickSuggestion"
+    >{{item}}</view>
+  </view>
+
+  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" bindtap="onSubmitQuestion">
+    {{submitting ? '种植中…' : '种到树上去'}}
+  </view>
+</view>
+
+<!-- 答题模式 -->
+<view class="card-page" wx:elif="{{mode === 'answer'}}">
+  <view class="head">
+    <image class="head-fruit fruit-glow" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
+    <text class="head-title">TA 想问你</text>
+  </view>
+
+  <view class="bubble bubble-q">
+    <text class="bubble-label">TA 的问题</text>
+    <text class="bubble-text">{{card.question}}</text>
+  </view>
+
+  <view class="card">
+    <textarea
+      class="input-area"
+      placeholder="认真回答哦，TA 在等呢…"
+      maxlength="{{answerMax}}"
+      value="{{answerInput}}"
+      bindinput="onAnswerInput"
+    />
+    <text class="counter">{{answerInput.length}}/{{answerMax}}</text>
+  </view>
+
+  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" bindtap="onSubmitAnswer">
+    {{submitting ? '提交中…' : '交给 TA'}}
+  </view>
+</view>
+
+<!-- 等待模式：我出的题，TA 还没答 -->
+<view class="card-page" wx:elif="{{mode === 'waiting'}}">
+  <view class="head">
+    <image class="head-fruit fruit-unripe" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
+    <text class="head-title">果子还在长大</text>
+    <text class="head-sub">TA 还没回答，再等等吧</text>
+  </view>
+  <view class="bubble bubble-q">
+    <text class="bubble-label">我的问题</text>
+    <text class="bubble-text">{{card.question}}</text>
+  </view>
+</view>
+
+<!-- 回看模式：已完成的问答 -->
+<view class="card-page" wx:elif="{{mode === 'view'}}">
+  <view class="head">
+    <image class="head-fruit" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
+    <text class="head-title">成熟的果子</text>
+  </view>
+  <view class="bubble bubble-q">
+    <text class="bubble-label">{{card.askedByMe ? '我的问题' : 'TA 的问题'}}</text>
+    <text class="bubble-text">{{card.question}}</text>
+  </view>
+  <view class="bubble bubble-a">
+    <text class="bubble-label">{{card.askedByMe ? 'TA 的回答' : '我的回答'}}</text>
+    <text class="bubble-text">{{card.answer}}</text>
+  </view>
+</view>

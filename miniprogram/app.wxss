@@ -1,0 +1,57 @@
+/**app.wxss - 全局样式**/
+page {
+  --color-bg: #FFF6EF;
+  --color-card: #FFFFFF;
+  --color-primary: #F27E9D;
+  --color-primary-deep: #E45A82;
+  --color-green: #7BC47F;
+  --color-green-deep: #5AA75F;
+  --color-gold: #F5B94E;
+  --color-text: #4A3B36;
+  --color-text-sub: #9B8A83;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #F98BA8, #E45A82);
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 20rpx 0;
+  text-align: center;
+  box-shadow: 0 8rpx 20rpx rgba(228, 90, 130, 0.3);
+}
+
+.btn-primary.disabled {
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-primary-deep);
+  border: 2rpx solid var(--color-primary);
+  border-radius: 48rpx;
+  font-size: 28rpx;
+  padding: 18rpx 0;
+  text-align: center;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: 32rpx;
+  padding: 36rpx;
+  box-shadow: 0 8rpx 32rpx rgba(74, 59, 54, 0.06);
+}
+
+.page-loading {
+  display: flex;
+  justify-content: center;
+  padding: 120rpx 0;
+  color: var(--color-text-sub);
+}

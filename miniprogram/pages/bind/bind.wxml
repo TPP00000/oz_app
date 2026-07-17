@@ -1,0 +1,42 @@
+<!--pages/bind/bind.wxml - 情侣绑定页-->
+<view class="bind-page">
+  <view class="hero">
+    <image class="hero-tree" src="/assets/tree-day.png" mode="widthFix" />
+    <text class="hero-title">邀请 TA 住进茄茄小屋</text>
+    <text class="hero-sub">一方生成邀请码，另一方输入，就能绑定成一对</text>
+  </view>
+
+  <!-- 生成邀请码 -->
+  <view class="card section">
+    <text class="section-title">我来邀请</text>
+    <block wx:if="{{inviteCode}}">
+      <view class="code-box" bindtap="onCopyCode">
+        <text class="code">{{inviteCode}}</text>
+        <text class="code-hint">点击复制，发给 TA</text>
+      </view>
+      <view class="btn-ghost" bindtap="onCheckBound">
+        {{checking ? '查询中…' : 'TA 输入好了？点我刷新'}}
+      </view>
+    </block>
+    <view wx:else class="btn-primary {{creating ? 'disabled' : ''}}" bindtap="onCreateInvite">
+      {{creating ? '生成中…' : '生成我的邀请码'}}
+    </view>
+  </view>
+
+  <view class="divider">或者</view>
+
+  <!-- 输入邀请码 -->
+  <view class="card section">
+    <text class="section-title">我有邀请码</text>
+    <input
+      class="code-input"
+      placeholder="输入 TA 发来的 6 位邀请码"
+      maxlength="6"
+      value="{{inputCode}}"
+      bindinput="onInputCode"
+    />
+    <view class="btn-primary {{binding ? 'disabled' : ''}}" bindtap="onBind">
+      {{binding ? '绑定中…' : '绑定'}}
+    </view>
+  </view>
+</view>

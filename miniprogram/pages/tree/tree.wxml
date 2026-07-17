@@ -1,0 +1,52 @@
+<!--pages/tree/tree.wxml - 茄茄愿望树页-->
+<view class="page-loading" wx:if="{{loading}}">愿望树生长中…</view>
+
+<view class="tree-page" wx:else>
+  <image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
+
+  <!-- 树的场景 -->
+  <view class="scene">
+    <view class="tree-wrap">
+      <image class="tree" src="/assets/tree-bare-day.png" mode="widthFix" />
+      <image
+        wx:for="{{fruits}}"
+        wx:key="id"
+        class="fruit fruit-{{item.status}}"
+        src="/assets/fruit-{{item.species}}.png"
+        mode="widthFix"
+        style="left: {{item.left}}%; top: {{item.top}}%;"
+        data-id="{{item.id}}"
+        bindtap="onTapFruit"
+      />
+    </view>
+    <view class="btn-primary plant-btn" bindtap="onPlant">🌱 种一个问题</view>
+  </view>
+
+  <!-- 图例 -->
+  <view class="legend">
+    <view class="legend-item"><view class="dot dot-waiting"></view><text>发光＝等你回答</text></view>
+    <view class="legend-item"><view class="dot dot-mine"></view><text>半透明＝等 TA</text></view>
+    <view class="legend-item"><view class="dot dot-done"></view><text>鲜亮＝已成熟</text></view>
+  </view>
+
+  <!-- 果子列表 -->
+  <view class="list" wx:if="{{allCards.length > 0}}">
+    <text class="list-title">全部愿望果 ({{allCards.length}})</text>
+    <view
+      wx:for="{{allCards}}"
+      wx:key="id"
+      class="list-item"
+      data-id="{{item.id}}"
+      bindtap="onTapFruit"
+    >
+      <image class="list-icon" src="/assets/fruit-{{item.species}}.png" mode="widthFix" />
+      <text class="list-q">{{item.question}}</text>
+      <text class="list-tag tag-{{item.status}}">{{item.statusText}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{allCards.length === 0}}">
+    <text>树上还光秃秃的～</text>
+    <text>种下第一个问题，等 TA 来回答吧</text>
+  </view>
+</view>
