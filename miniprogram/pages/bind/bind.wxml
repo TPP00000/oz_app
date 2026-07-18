@@ -1,7 +1,7 @@
 <!--pages/bind/bind.wxml - 情侣绑定页-->
 <view class="bind-page" style="padding-top: {{safeTop + 40}}px">
   <view class="hero">
-    <image class="hero-tree" src="/assets/tree-day.png" mode="widthFix" />
+    <image class="hero-house" src="/assets/house-eggplant.png" mode="widthFix" />
     <text class="hero-title">邀请 TA 住进茄茄小屋</text>
     <text class="hero-sub">一方生成邀请码，另一方输入，就能绑定成一对</text>
   </view>

@@ -12,6 +12,7 @@ const ROUTES = {
   'user.init': userHandlers.init,
   'couple.createInvite': coupleHandlers.createInvite,
   'couple.bindWithCode': coupleHandlers.bindWithCode,
+  'couple.unbind': coupleHandlers.unbind,
   'card.list': cardHandlers.list,
   'card.create': cardHandlers.create,
   'card.get': cardHandlers.get,

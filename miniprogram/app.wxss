@@ -82,3 +82,38 @@ page {
   color: var(--color-ink-soft);
   letter-spacing: 2rpx;
 }
+
+/* ============ 静默刷新指示器：无背景的细线转圈，低调融入画面 ============ */
+.refresh-tip {
+  position: fixed;
+  left: 50%;
+  top: 24vh;
+  transform: translateX(-50%);
+  z-index: 50;
+  opacity: 0.55;
+  animation: fade-in 0.4s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+
+.spinner {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(150, 110, 70, 0.18);
+  border-top-color: rgba(107, 74, 50, 0.75);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

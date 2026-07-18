@@ -173,4 +173,33 @@ async function bindWithCode({ openid, data }) {
   return ok({ couple: { id: bound._id, boundAt: bound.boundAt } })
 }
 
-module.exports = { createInvite, bindWithCode }
+/**
+ * couple.unbind - 解除调用者当前的绑定关系（无界面入口，供开发调试/特殊场景手动调用）
+ * 关系标记为 dissolved 而非删除，旧卡片数据保留但不再可见
+ */
+async function unbind({ openid }) {
+  const user = await shared.findUserByOpenid(openid)
+  if (!user) {
+    return fail('请先重新打开小程序')
+  }
+  const couple = await shared.findBoundCoupleByMember(openid)
+  if (!couple) {
+    return ok({ unbound: false })
+  }
+
+  await db
+    .collection('couples')
+    .where({ _id: couple._id })
+    .update({ data: { status: 'dissolved', dissolvedAt: db.serverDate() } })
+
+  const members = [couple.creatorOpenid, couple.partnerOpenid].filter(Boolean)
+  const _ = db.command
+  await db
+    .collection('users')
+    .where({ openid: _.in(members) })
+    .update({ data: { coupleId: null } })
+
+  return ok({ unbound: true })
+}
+
+module.exports = { createInvite, bindWithCode, unbind }

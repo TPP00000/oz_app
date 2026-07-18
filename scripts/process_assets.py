@@ -23,6 +23,7 @@ TARGETS = {
     "fruit-eggplant.png": {"width": 240},
     "fruit-apple.png": {"width": 240},
     "heart.png": {"width": 160},
+    "house-eggplant.png": {"width": 480},
     "title.png": {"width": 640, "all_white": True},
 }
 

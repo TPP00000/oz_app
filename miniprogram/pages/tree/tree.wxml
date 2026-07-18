@@ -3,6 +3,9 @@
 
 <view class="tree-page" wx:else style="padding-top: {{safeTop + 60}}px">
   <nav-back />
+  <view class="refresh-tip" wx:if="{{refreshing}}">
+    <view class="spinner"></view>
+  </view>
   <image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
 
   <!-- 树的场景 -->

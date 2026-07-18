@@ -11,9 +11,10 @@
 <view class="home" wx:else>
   <scroll-view
     class="pano-scroll"
-    scroll-x
-    enhanced
+    scroll-x="{{true}}"
+    enhanced="{{true}}"
     bounces="{{false}}"
+    fast-deceleration="{{false}}"
     show-scrollbar="{{false}}"
     scroll-left="{{scrollLeft}}"
   >
@@ -47,6 +48,10 @@
       </view>
     </view>
   </scroll-view>
+
+  <view class="refresh-tip" wx:if="{{refreshing}}">
+    <view class="spinner"></view>
+  </view>
 
   <view class="header-chip" style="top: {{chipTop}}px">
     <image class="title-img" src="/assets/title.png" mode="widthFix" />

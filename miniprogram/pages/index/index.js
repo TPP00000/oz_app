@@ -24,6 +24,7 @@ Page({
   data: {
     loading: true,
     loadFailed: false,
+    refreshing: false,
     daysTogether: 0,
     pendingForMe: 0,
     panoWidth: 0,
@@ -57,7 +58,13 @@ Page({
   },
 
   async loadHome() {
-    this.setData({ loading: true, loadFailed: false })
+    // 首次进入显示全屏加载；之后返回页面时只在后台静默刷新
+    const firstLoad = !this.hasLoaded
+    if (firstLoad) {
+      this.setData({ loading: true, loadFailed: false })
+    } else {
+      this.setData({ refreshing: true })
+    }
     try {
       const result = await api.call('user.init')
       app.globalData.openid = result.openid
@@ -73,13 +80,19 @@ Page({
         (c) => c.status === 'pending' && !c.askedByMe
       ).length
 
+      this.hasLoaded = true
       this.setData({
         loading: false,
+        refreshing: false,
         daysTogether: this.calcDays(result.couple.boundAt),
         pendingForMe
       })
     } catch (err) {
-      this.setData({ loading: false, loadFailed: true })
+      if (this.hasLoaded) {
+        this.setData({ refreshing: false })
+      } else {
+        this.setData({ loading: false, loadFailed: true })
+      }
       ui.showError(this, err)
     }
   },

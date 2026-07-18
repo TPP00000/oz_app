@@ -19,6 +19,7 @@ const MAX_TREE_FRUITS = FRUIT_SLOTS.length
 Page({
   data: {
     loading: true,
+    refreshing: false,
     fruits: [],
     allCards: [],
     safeTop: 20
@@ -33,7 +34,13 @@ Page({
   },
 
   async loadCards() {
-    this.setData({ loading: true })
+    // 首次进入显示全屏加载；之后返回页面时只在后台静默刷新
+    const firstLoad = !this.hasLoaded
+    if (firstLoad) {
+      this.setData({ loading: true })
+    } else {
+      this.setData({ refreshing: true })
+    }
     try {
       const cards = await api.call('card.list')
       const allCards = cards.map((card) => ({
@@ -51,9 +58,10 @@ Page({
         species: card.species,
         status: card.status
       }))
-      this.setData({ loading: false, fruits, allCards })
+      this.hasLoaded = true
+      this.setData({ loading: false, refreshing: false, fruits, allCards })
     } catch (err) {
-      this.setData({ loading: false })
+      this.setData({ loading: false, refreshing: false })
       ui.showError(this, err)
     }
   },
