@@ -43,6 +43,7 @@
         hover-class="sprite-pressed"
         hover-stay-time="250"
         style="left: {{item.left}}%; top: {{item.top}}%; width: {{item.width}}%; height: {{item.height}}%;"
+        data-key="{{item.key}}"
         data-name="{{item.name}}"
         data-url="{{item.url || ''}}"
         bindtap="onTapPlaceholder"
@@ -54,6 +55,25 @@
           style="left: {{item.img.left}}%; top: {{item.img.top}}%; width: {{item.img.width}}%; height: {{item.img.height}}%;"
         />
       </view>
+
+      <!-- 茄子造型/双人姿势叠加层 -->
+      <image
+        wx:for="{{overlays}}"
+        wx:key="key"
+        class="avatar-overlay"
+        src="{{item.src}}"
+        mode="scaleToFill"
+        style="left: {{item.rect.left}}%; top: {{item.rect.top}}%; width: {{item.rect.width}}%; height: {{item.rect.height}}%;"
+      />
+      <!-- 合体状态的点击热区 -->
+      <view
+        wx:if="{{duoRect}}"
+        class="hotspot duo-hotspot"
+        hover-class="sprite-pressed"
+        hover-stay-time="250"
+        style="left: {{duoRect.left}}%; top: {{duoRect.top}}%; width: {{duoRect.width}}%; height: {{duoRect.height}}%;"
+        bindtap="onTapDuo"
+      ></view>
 
       <!-- 愿望树精灵：点击进入愿望树页 -->
       <view
@@ -94,6 +114,55 @@
       </view>
     </view>
     <view class="board-dot" wx:if="{{pendingForMe > 0}}">{{pendingForMe}}</view>
+  </view>
+
+  <!-- 角色选择 -->
+  <view class="mask" wx:if="{{rolePick}}" bindtap="onCloseRolePick">
+    <view class="role-card card" catchtap="">
+      <text class="role-title">你是哪只茄子？</text>
+      <text class="role-sub">选定后就是你在小屋里的分身啦</text>
+      <view class="role-row">
+        <view
+          class="role-option {{roleTaken === 'king' ? 'role-disabled' : ''}}"
+          hover-class="btn-pressed"
+          data-role="king"
+          bindtap="onChooseRole"
+        >
+          <image class="role-img" src="{{portraitKing}}" mode="aspectFit" />
+          <text>茄子王</text>
+          <text class="role-taken" wx:if="{{roleTaken === 'king'}}">TA 已选</text>
+        </view>
+        <view
+          class="role-option {{roleTaken === 'small' ? 'role-disabled' : ''}}"
+          hover-class="btn-pressed"
+          data-role="small"
+          bindtap="onChooseRole"
+        >
+          <image class="role-img" src="{{portraitSmall}}" mode="aspectFit" />
+          <text>小茄子</text>
+          <text class="role-taken" wx:if="{{roleTaken === 'small'}}">TA 已选</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 造型/互动面板 -->
+  <view class="mask" wx:if="{{panel}}" bindtap="onClosePanel">
+    <view class="panel card" catchtap="">
+      <text class="panel-title">{{panel.title}}</text>
+      <view class="panel-options">
+        <view
+          wx:for="{{panel.options}}"
+          wx:key="key"
+          class="panel-option {{item.active ? 'panel-active' : ''}}"
+          hover-class="btn-pressed"
+          data-key="{{item.key}}"
+          data-kind="{{item.kind || ''}}"
+          bindtap="onPanelSelect"
+        >{{item.label}}</view>
+      </view>
+      <view class="btn-ghost panel-cancel" hover-class="btn-pressed" bindtap="onClosePanel">先不了</view>
+    </view>
   </view>
 </view>
 

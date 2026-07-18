@@ -1,0 +1,46 @@
+<!--pages/kitchen/kitchen.wxml - 厨房（固定白天）-->
+<view class="room">
+  <scroll-view
+    class="pano-scroll"
+    scroll-x="{{true}}"
+    enhanced="{{true}}"
+    bounces="{{false}}"
+    fast-deceleration="{{false}}"
+    show-scrollbar="{{false}}"
+    scroll-left="{{scrollLeft}}"
+  >
+    <view class="pano" style="width: {{panoWidth}}px; height: {{panoHeight}}px;">
+      <image
+        class="pano-img {{sceneLoaded ? 'pano-img-show' : ''}}"
+        src="{{sceneSrc}}"
+        bindload="onSceneLoad"
+        binderror="onSceneError"
+      />
+
+      <!-- 拱形门洞：回到客厅（有精灵时呼吸缩放+金色光晕，否则柔光反馈） -->
+      <view
+        class="hotspot"
+        hover-class="{{doorSprite ? 'sprite-pressed' : 'hotspot-hover'}}"
+        hover-stay-time="250"
+        style="left: {{doorRect.left}}%; top: {{doorRect.top}}%; width: {{doorRect.width}}%; height: {{doorRect.height}}%;"
+        bindtap="onTapDoor"
+      >
+        <image
+          wx:if="{{doorSprite}}"
+          class="obj-sprite"
+          src="{{doorSprite}}"
+          mode="scaleToFill"
+          style="left: 0%; top: 0%; width: 100%; height: 100%;"
+        />
+        <view wx:else class="glow"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 顶部纸片：房间名 -->
+  <view class="room-chip" style="top: {{chipTop}}px">
+    <text class="chip-name">厨房</text>
+  </view>
+</view>
+
+<paper-toast id="toast" />

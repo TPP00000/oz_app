@@ -1,0 +1,76 @@
+<!--pages/notes/notes.wxml - 留言板-->
+<image class="page-bg" src="/assets/card-paper.jpg" mode="aspectFill" />
+<nav-back />
+
+<view class="page-loading" wx:if="{{loading}}">留言板擦拭中…</view>
+
+<view class="notes-page" wx:else style="padding-top: {{safeTop + 60}}px">
+  <view class="refresh-tip" wx:if="{{refreshing}}">
+    <view class="spinner"></view>
+  </view>
+
+  <view class="head">
+    <text class="head-title">留言板</text>
+    <text class="head-sub" wx:if="{{total > 0}}">贴着 {{total}} 张手写的小纸条</text>
+  </view>
+
+  <!-- 纸条双列墙 -->
+  <view class="wall" wx:if="{{total > 0}}">
+    <view class="col">
+      <view
+        wx:for="{{leftCol}}"
+        wx:key="id"
+        class="note"
+        style="transform: rotate({{item.tilt}}deg)"
+        data-id="{{item.id}}"
+        data-mine="{{item.mine}}"
+        data-fileid="{{item.fileId}}"
+        bindtap="onTapNote"
+        bindlongpress="onLongPress"
+      >
+        <view class="pin"></view>
+        <image class="note-img" src="{{item.fileId}}" mode="widthFix" />
+        <view class="note-meta">
+          <text class="meta-who {{item.mine ? 'who-me' : 'who-ta'}}">{{item.who}}</text>
+          <text class="meta-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="col">
+      <view
+        wx:for="{{rightCol}}"
+        wx:key="id"
+        class="note"
+        style="transform: rotate({{item.tilt}}deg)"
+        data-id="{{item.id}}"
+        data-mine="{{item.mine}}"
+        data-fileid="{{item.fileId}}"
+        bindtap="onTapNote"
+        bindlongpress="onLongPress"
+      >
+        <view class="pin"></view>
+        <image class="note-img" src="{{item.fileId}}" mode="widthFix" />
+        <view class="note-meta">
+          <text class="meta-who {{item.mine ? 'who-me' : 'who-ta'}}">{{item.who}}</text>
+          <text class="meta-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{total === 0}}">
+    <image class="empty-heart" src="/assets/heart.png" mode="widthFix" />
+    <text>板上还空空的～</text>
+    <text>亲手写下第一张纸条吧</text>
+  </view>
+</view>
+
+<!-- 写一张 -->
+<view
+  class="btn-primary write-btn"
+  hover-class="btn-pressed"
+  bindtap="onWrite"
+  wx:if="{{!loading}}"
+>✍️ 写一张</view>
+
+<paper-toast id="toast" />

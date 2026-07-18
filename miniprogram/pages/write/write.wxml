@@ -1,0 +1,51 @@
+<!--pages/write/write.wxml - 手写画板-->
+<image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
+<nav-back />
+
+<view class="write-page" style="padding-top: {{safeTop + 60}}px">
+  <text class="head-title">{{editing ? '修改我的纸条' : '写给 TA 的纸条'}}</text>
+
+  <!-- 画布：信纸质感 -->
+  <view class="paper">
+    <image class="paper-bg" src="/assets/card-paper.jpg" mode="aspectFill" />
+    <canvas
+      id="board"
+      class="board"
+      type="2d"
+      disable-scroll="true"
+      bindtouchstart="onTouchStart"
+      bindtouchmove="onTouchMove"
+      bindtouchend="onTouchEnd"
+    ></canvas>
+  </view>
+
+  <!-- 笔与操作 -->
+  <view class="toolbar">
+    <view class="pens">
+      <view
+        wx:for="{{pens}}"
+        wx:key="key"
+        class="pen {{!eraser && activePen === item.key ? 'pen-active' : ''}}"
+        style="background: {{item.color}}"
+        data-pen="{{item.key}}"
+        bindtap="onSelectPen"
+      ></view>
+      <view
+        class="pen pen-eraser {{eraser ? 'pen-active' : ''}}"
+        bindtap="onToggleEraser"
+      >擦</view>
+    </view>
+  </view>
+  <view class="toolbar">
+    <view class="btn-ghost tool-btn" hover-class="btn-pressed" bindtap="onUndo">撤销一笔</view>
+    <view class="btn-ghost tool-btn" hover-class="btn-pressed" bindtap="onClear">全部清空</view>
+  </view>
+
+  <view
+    class="btn-primary save-btn {{saving || strokeCount === 0 ? 'disabled' : ''}}"
+    hover-class="btn-pressed"
+    bindtap="onSave"
+  >{{saving ? '张贴中…' : '贴到留言板'}}</view>
+</view>
+
+<paper-toast id="toast" />

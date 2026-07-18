@@ -1,0 +1,86 @@
+<!--pages/room/room.wxml - 卧室（共用模板，昼夜两张场景图按时区切换）-->
+<view class="room {{isDay ? 'room-day' : 'room-night'}}">
+  <scroll-view
+    class="pano-scroll"
+    scroll-x="{{true}}"
+    enhanced="{{true}}"
+    bounces="{{false}}"
+    fast-deceleration="{{false}}"
+    show-scrollbar="{{false}}"
+    scroll-left="{{scrollLeft}}"
+  >
+    <view class="pano" style="width: {{panoWidth}}px; height: {{panoHeight}}px;">
+      <image
+        class="pano-img {{sceneLoaded ? 'pano-img-show' : ''}}"
+        src="{{sceneSrc}}"
+        bindload="onSceneLoad"
+        binderror="onSceneError"
+      />
+
+      <!-- 门：回到客厅（有精灵时呼吸缩放+金色光晕，否则柔光反馈） -->
+      <view
+        class="hotspot"
+        hover-class="{{doorSprite ? 'sprite-pressed' : 'hotspot-hover'}}"
+        hover-stay-time="250"
+        style="left: {{doorRect.left}}%; top: {{doorRect.top}}%; width: {{doorRect.width}}%; height: {{doorRect.height}}%;"
+        bindtap="onTapDoor"
+      >
+        <image
+          wx:if="{{doorSprite}}"
+          class="obj-sprite"
+          src="{{doorSprite}}"
+          mode="scaleToFill"
+          style="left: 0%; top: 0%; width: 100%; height: 100%;"
+        />
+        <view wx:else class="glow"></view>
+      </view>
+
+      <!-- 挂钟：设置时区（有精灵时呼吸缩放+金色光晕，否则柔光反馈） -->
+      <view
+        class="hotspot"
+        hover-class="{{clockSprite ? 'sprite-pressed' : 'hotspot-hover'}}"
+        hover-stay-time="250"
+        style="left: {{clockRect.left}}%; top: {{clockRect.top}}%; width: {{clockRect.width}}%; height: {{clockRect.height}}%;"
+        bindtap="onTapClock"
+      >
+        <image
+          wx:if="{{clockSprite}}"
+          class="obj-sprite"
+          src="{{clockSprite}}"
+          mode="scaleToFill"
+          style="left: 0%; top: 0%; width: 100%; height: 100%;"
+        />
+        <view wx:else class="glow"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 顶部纸片：房间名 + 当地时间 -->
+  <view class="room-chip" style="top: {{chipTop}}px">
+    <text class="chip-name">{{roomName}}</text>
+    <text class="chip-time">{{zoneLabel}}时间 {{timeText}}</text>
+  </view>
+
+  <!-- 时区选择面板 -->
+  <view class="mask" wx:if="{{zonePanel}}" bindtap="onCloseZonePanel">
+    <view class="panel card" catchtap="">
+      <text class="panel-title">把挂钟拨到哪里的时间？</text>
+      <view class="zone-list">
+        <view
+          wx:for="{{zonePanel.zones}}"
+          wx:key="key"
+          class="zone-option {{item.active ? 'zone-active' : ''}}"
+          hover-class="btn-pressed"
+          data-key="{{item.key}}"
+          bindtap="onPickZone"
+        >
+          <text>{{item.label}}</text>
+          <text class="zone-time">{{item.timeText}}</text>
+        </view>
+      </view>
+      <view class="btn-ghost panel-cancel" hover-class="btn-pressed" bindtap="onCloseZonePanel">先不拨了</view>
+    </view>
+  </view>
+</view>
+
+<paper-toast id="toast" />

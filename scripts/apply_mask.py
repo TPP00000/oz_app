@@ -1,7 +1,8 @@
 # scripts/apply_mask.py - 把手动抠图工具导出的掩码转成精灵（本地工具）
-# 用法: python scripts/apply_mask.py <源图> <掩码png> <精灵名>
+# 用法: python scripts/apply_mask.py <源图> <掩码png> <精灵名> [输出目录]
 # 例:   python scripts/apply_mask.py assets-src/pano-final-with.jpg mask-window.png window
-# 输出: miniprogram/assets/sp-<名>.webp + 打印 index.js 配置行
+# 输出: <输出目录>/sp-<名>.png（默认 miniprogram/assets；iOS 真机不解析本地 webp，一律 png）
+#       + 打印配置行（坐标百分比按源图尺寸算）
 import io
 import sys
 from pathlib import Path
@@ -17,8 +18,10 @@ OUT = ROOT / "miniprogram" / "assets"
 
 def main() -> None:
     if len(sys.argv) < 4:
-        raise SystemExit("用法: python scripts/apply_mask.py <源图> <掩码png> <精灵名>")
+        raise SystemExit("用法: python scripts/apply_mask.py <源图> <掩码png> <精灵名> [输出目录]")
     src_path, mask_path, name = sys.argv[1], sys.argv[2], sys.argv[3]
+    out_dir = Path(sys.argv[4]) if len(sys.argv) > 4 else OUT
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     src = Image.open(src_path).convert("RGB")
     mask = Image.open(mask_path).convert("L")
@@ -43,12 +46,12 @@ def main() -> None:
 
     sp = src.convert("RGBA")
     sp.putalpha(alpha)
-    out_name = f"sp-{name}.webp"
-    sp.crop((l, t, r, b)).save(OUT / out_name, quality=85, method=6)
+    out_name = f"sp-{name}.png"
+    sp.crop((l, t, r, b)).save(out_dir / out_name, optimize=True)
 
     w, h = src.size
-    kb = (OUT / out_name).stat().st_size // 1024
-    print(f"已生成 {out_name}  {r-l}x{b-t}  {kb}KB")
+    kb = (out_dir / out_name).stat().st_size // 1024
+    print(f"已生成 {out_dir / out_name}  {r-l}x{b-t}  {kb}KB")
     print("index.js 配置（hot 即 img，全为本体）：")
     print(
         f"  {{ key: '{name}', name: 'XX', src: '{out_name}', "

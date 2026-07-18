@@ -1,0 +1,96 @@
+/* pages/write/write.wxss */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.write-page {
+  padding: 0 40rpx 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26rpx;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.head-title {
+  font-size: 36rpx;
+  color: var(--color-ink);
+  letter-spacing: 4rpx;
+}
+
+/* 信纸画布 */
+.paper {
+  position: relative;
+  width: 100%;
+  height: 56vh;
+  border-radius: 24rpx;
+  overflow: hidden;
+  border: 3rpx solid var(--color-line);
+  box-shadow: 0 10rpx 28rpx rgba(120, 85, 50, 0.18);
+}
+
+.paper-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.board {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 工具行 */
+.toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.pens {
+  flex: 1;
+  display: flex;
+  gap: 22rpx;
+}
+
+.pen {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4rpx 10rpx rgba(120, 85, 50, 0.25);
+}
+
+.pen-active {
+  border-color: #fff;
+  outline: 4rpx solid var(--color-gold);
+}
+
+/* 橡皮擦 */
+.pen-eraser {
+  background: #fffdf6;
+  border: 3rpx dashed rgba(150, 110, 70, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: var(--color-ink-soft);
+}
+
+.tool-btn {
+  flex: 1;
+  padding: 14rpx 0;
+}
+
+.save-btn {
+  width: 100%;
+}

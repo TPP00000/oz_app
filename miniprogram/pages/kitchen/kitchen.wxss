@@ -1,0 +1,12 @@
+/* pages/kitchen/kitchen.wxss - 厨房：场景通用样式见 styles/scene.wxss */
+@import "../../styles/scene.wxss";
+
+page {
+  overflow: hidden;
+}
+
+.room {
+  width: 100vw;
+  height: 100vh;
+  background: #fbf3e4;
+}

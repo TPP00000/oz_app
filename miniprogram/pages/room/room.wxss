@@ -1,0 +1,92 @@
+/* pages/room/room.wxss - 卧室（共用模板）：场景通用样式见 styles/scene.wxss */
+@import "../../styles/scene.wxss";
+
+page {
+  overflow: hidden;
+}
+
+.room {
+  width: 100vw;
+  height: 100vh;
+  transition: background-color 0.6s ease;
+}
+
+/* 场景图加载完成前的底色：白天奶油、夜晚暖夜蓝 */
+.room-day {
+  background: #fbf3e4;
+}
+
+.room-night {
+  background: #2c2a3e;
+}
+
+.chip-time {
+  font-size: 22rpx;
+  letter-spacing: 1rpx;
+  color: var(--color-ink-soft);
+}
+
+/* ============ 时区面板 ============ */
+.mask {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(60, 42, 28, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  width: 590rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 40rpx 36rpx;
+}
+
+.panel-title {
+  text-align: center;
+  font-size: 30rpx;
+  color: var(--color-ink);
+}
+
+.zone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.zone-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: #fbedde;
+  border: 3rpx solid var(--color-line);
+  border-radius: 999rpx;
+  font-size: 27rpx;
+  color: var(--color-ink);
+  box-shadow: 0 5rpx 0 rgba(170, 130, 90, 0.22),
+    inset 0 3rpx 0 rgba(255, 255, 255, 0.7);
+}
+
+.zone-time {
+  font-size: 24rpx;
+  color: var(--color-ink-soft);
+}
+
+.zone-active {
+  background: linear-gradient(135deg, #fbc29b, #f09372);
+  border-color: rgba(150, 90, 55, 0.55);
+  color: #fff;
+  text-shadow: 0 2rpx 0 rgba(140, 80, 50, 0.3);
+}
+
+.zone-active .zone-time {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.panel-cancel {
+  margin-top: 6rpx;
+}

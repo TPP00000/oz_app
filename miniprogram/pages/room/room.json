@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "paper-toast": "/components/paper-toast/paper-toast"
+  },
+  "navigationBarTitleText": "卧室",
+  "disableScroll": true
+}

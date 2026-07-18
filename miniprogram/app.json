@@ -5,7 +5,11 @@
     "pages/tree/tree",
     "pages/card/card",
     "pages/overview/overview",
-    "pages/photos/photos"
+    "pages/photos/photos",
+    "pages/notes/notes",
+    "pages/write/write",
+    "pages/room/room",
+    "pages/kitchen/kitchen"
   ],
   "window": {
     "navigationStyle": "custom",

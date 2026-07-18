@@ -146,9 +146,7 @@ Page({
     })
 
     return {
-      treeSrc: TREE_STAGE_PREFIX
-        ? `${TREE_STAGE_PREFIX}stage-${stage}.png`
-        : '/assets/tree-bare-day.png',
+      treeSrc: `${TREE_STAGE_PREFIX}stage-${stage}.png`,
       stage,
       stageName: STAGE_NAMES[stage],
       growText,

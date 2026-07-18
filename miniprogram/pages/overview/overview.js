@@ -79,7 +79,7 @@ Page({
         title: '留言板',
         desc: '手写的小纸条',
         badge: 0,
-        url: ''
+        url: '/pages/notes/notes'
       },
       {
         key: 'more',
