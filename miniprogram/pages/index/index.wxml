@@ -64,7 +64,7 @@
       >
         <image
           class="obj-sprite"
-          src="/assets/sp-tree.webp"
+          src="/assets/sp-tree.png"
           mode="scaleToFill"
           style="left: {{treeImg.left}}%; top: {{treeImg.top}}%; width: {{treeImg.width}}%; height: {{treeImg.height}}%;"
         />
