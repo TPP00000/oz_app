@@ -47,41 +47,28 @@
   transition: opacity 0.35s ease;
 }
 
-.glow-gold {
-  background: radial-gradient(
-    ellipse closest-side,
-    rgba(255, 219, 140, 0.6),
-    rgba(255, 219, 140, 0.28) 60%,
-    rgba(255, 219, 140, 0) 100%
-  );
-}
-
 .hotspot-hover .glow {
   opacity: 1;
 }
 
-/* 愿望树热区在其他家具热区之上 */
+/* 愿望树热区在其他物件精灵之上 */
 .tree-hotspot {
   z-index: 2;
 }
 
-/* 树精灵：从场景图中抠出的图层，静止时与背景逐像素重合 */
-.tree-sprite {
+/* 物件精灵：从场景图中抠出的图层，静止时与背景逐像素重合
+ * （位置尺寸由内联样式给出：图像含阴影，可超出热区，超出部分不可点击）*/
+.obj-sprite {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform-origin: 50% 92%;
-  transition: transform 0.25s ease;
+  transform-origin: 50% 88%;
+  transition: filter 0.25s ease;
 }
 
-/* 按住时整棵树轻轻呼吸 + 身后光晕浮现（确认选中） */
-.tree-pressed .tree-sprite {
+/* 按住时物件呼吸缩放 + 贴合轮廓的金色光晕（由透明通道生成） */
+.sprite-pressed .obj-sprite {
   animation: sprite-breathe 1.1s ease-in-out infinite;
-}
-
-.tree-pressed .glow {
-  opacity: 1;
+  filter: drop-shadow(0 0 20rpx rgba(255, 214, 130, 0.95))
+    drop-shadow(0 0 6rpx rgba(255, 226, 160, 0.8));
 }
 
 @keyframes sprite-breathe {
@@ -89,7 +76,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
 }
 

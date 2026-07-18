@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>茄茄小屋 · 手动抠图工具</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #2b2b2b; color: #eee; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  #toolbar { padding: 10px 14px; background: #1e1e1e; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #toolbar button, #toolbar label.file { background: #4a4a4a; color: #eee; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+  #toolbar button:hover, #toolbar label.file:hover { background: #5a5a5a; }
+  #toolbar button.active { background: #c96; color: #222; }
+  #toolbar button.primary { background: #7a5; color: #142; font-weight: bold; }
+  #toolbar input[type=text] { padding: 8px; border-radius: 8px; border: none; width: 120px; background: #333; color: #eee; }
+  #hint { padding: 6px 14px; background: #262626; font-size: 12.5px; color: #aaa; line-height: 1.6; }
+  #wrap { flex: 1; position: relative; overflow: hidden; cursor: crosshair; }
+  canvas { position: absolute; top: 0; left: 0; }
+  #status { position: absolute; right: 10px; bottom: 8px; background: rgba(0,0,0,.6); padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div id="toolbar">
+  <label class="file">打开图片<input id="file" type="file" accept="image/*" style="display:none"></label>
+  <button id="btnAdd" class="active">描边模式</button>
+  <button id="btnSub">挖孔模式</button>
+  <button id="btnSmooth" class="active">平滑曲线：开</button>
+  <button id="btnUndo">撤销点 (Z)</button>
+  <button id="btnDelShape">删除当前区域</button>
+  <button id="btnClear">全部清空</button>
+  <span style="flex:1"></span>
+  名称 <input id="name" type="text" placeholder="如 window">
+  <button id="btnExport" class="primary">导出掩码 PNG</button>
+</div>
+<div id="hint">
+  左键点击加点｜拖拽已有点微调｜<b>双击</b>闭合当前区域｜滚轮缩放｜按住右键或空格拖动平移｜
+  一张图可画多个区域（描边=保留，挖孔=剔除）。导出的掩码 PNG 和原图等大，发我即可。
+</div>
+<div id="wrap"><canvas id="cv"></canvas><div id="status">未加载图片</div></div>
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const wrap = document.getElementById('wrap');
+const status = document.getElementById('status');
+
+let img = null;
+let view = { scale: 1, ox: 0, oy: 0 };
+let shapes = [];              // {mode:'add'|'sub', pts:[{x,y}], closed:bool}
+let current = null;
+let mode = 'add';
+let smooth = true;
+let dragging = null;          // {shape, idx}
+let panning = null;
+let spaceDown = false;
+
+function resize() {
+  cv.width = wrap.clientWidth;
+  cv.height = wrap.clientHeight;
+  draw();
+}
+window.addEventListener('resize', resize);
+
+document.getElementById('file').onchange = (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  const im = new Image();
+  im.onload = () => {
+    img = im;
+    const s = Math.min(cv.width / im.width, cv.height / im.height) * 0.95;
+    view = { scale: s, ox: (cv.width - im.width * s) / 2, oy: (cv.height - im.height * s) / 2 };
+    shapes = []; current = null;
+    draw();
+  };
+  im.src = url;
+};
+
+function toImg(px, py) {
+  return { x: (px - view.ox) / view.scale, y: (py - view.oy) / view.scale };
+}
+function toScreen(p) {
+  return { x: p.x * view.scale + view.ox, y: p.y * view.scale + view.oy };
+}
+
+function pathOf(c, pts, closed) {
+  if (pts.length === 0) return;
+  if (!smooth || pts.length < 3) {
+    c.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) c.lineTo(pts[i].x, pts[i].y);
+    if (closed) c.closePath();
+    return;
+  }
+  // Catmull-Rom 转贝塞尔
+  const P = closed ? pts : [pts[0], ...pts, pts[pts.length - 1]];
+  const n = pts.length;
+  c.moveTo(pts[0].x, pts[0].y);
+  const seg = closed ? n : n - 1;
+  for (let i = 0; i < seg; i++) {
+    const p0 = closed ? pts[(i - 1 + n) % n] : P[i];
+    const p1 = closed ? pts[i] : P[i + 1];
+    const p2 = closed ? pts[(i + 1) % n] : P[i + 2];
+    const p3 = closed ? pts[(i + 2) % n] : P[i + 3];
+    const c1 = { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 };
+    const c2 = { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 };
+    c.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, p2.x, p2.y);
+  }
+  if (closed) c.closePath();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  if (!img) return;
+  ctx.save();
+  ctx.translate(view.ox, view.oy);
+  ctx.scale(view.scale, view.scale);
+  ctx.drawImage(img, 0, 0);
+  for (const s of [...shapes, current].filter(Boolean)) {
+    ctx.beginPath();
+    pathOf(ctx, s.pts, s.closed);
+    ctx.lineWidth = 2 / view.scale;
+    if (s.mode === 'add') {
+      ctx.strokeStyle = '#ff3b3b';
+      ctx.fillStyle = 'rgba(255,60,60,0.18)';
+    } else {
+      ctx.strokeStyle = '#3b8bff';
+      ctx.fillStyle = 'rgba(60,120,255,0.25)';
+    }
+    if (s.closed) ctx.fill();
+    ctx.stroke();
+    const r = 5 / view.scale;
+    for (const p of s.pts) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 1 / view.scale;
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+  status.textContent = img ? `图片 ${img.width}×${img.height} ｜ 区域 ${shapes.length} 个 ｜ 缩放 ${(view.scale*100).toFixed(0)}%` : '未加载图片';
+}
+
+function hitPoint(px, py) {
+  const t = 8;
+  for (const s of [...shapes, current].filter(Boolean)) {
+    for (let i = 0; i < s.pts.length; i++) {
+      const sp = toScreen(s.pts[i]);
+      if (Math.abs(sp.x - px) < t && Math.abs(sp.y - py) < t) return { shape: s, idx: i };
+    }
+  }
+  return null;
+}
+
+wrap.addEventListener('mousedown', (e) => {
+  if (!img) return;
+  const rect = wrap.getBoundingClientRect();
+  const px = e.clientX - rect.left, py = e.clientY - rect.top;
+  if (e.button === 2 || spaceDown) {
+    panning = { px, py, ox: view.ox, oy: view.oy };
+    return;
+  }
+  if (e.button !== 0) return;
+  const hp = hitPoint(px, py);
+  if (hp) { dragging = hp; return; }
+  const p = toImg(px, py);
+  p.x = Math.max(0, Math.min(img.width, p.x));
+  p.y = Math.max(0, Math.min(img.height, p.y));
+  if (!current) current = { mode, pts: [], closed: false };
+  current.pts.push(p);
+  draw();
+});
+wrap.addEventListener('mousemove', (e) => {
+  const rect = wrap.getBoundingClientRect();
+  const px = e.clientX - rect.left, py = e.clientY - rect.top;
+  if (panning) {
+    view.ox = panning.ox + (px - panning.px);
+    view.oy = panning.oy + (py - panning.py);
+    draw();
+    return;
+  }
+  if (dragging) {
+    const p = toImg(px, py);
+    dragging.shape.pts[dragging.idx] = {
+      x: Math.max(0, Math.min(img.width, p.x)),
+      y: Math.max(0, Math.min(img.height, p.y))
+    };
+    draw();
+  }
+});
+window.addEventListener('mouseup', () => { dragging = null; panning = null; });
+wrap.addEventListener('contextmenu', (e) => e.preventDefault());
+wrap.addEventListener('dblclick', () => {
+  if (current && current.pts.length >= 3) {
+    current.closed = true;
+    shapes.push(current);
+    current = null;
+    draw();
+  }
+});
+wrap.addEventListener('wheel', (e) => {
+  if (!img) return;
+  e.preventDefault();
+  const rect = wrap.getBoundingClientRect();
+  const px = e.clientX - rect.left, py = e.clientY - rect.top;
+  const before = toImg(px, py);
+  view.scale *= e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  view.scale = Math.max(0.05, Math.min(12, view.scale));
+  view.ox = px - before.x * view.scale;
+  view.oy = py - before.y * view.scale;
+  draw();
+}, { passive: false });
+
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { spaceDown = true; wrap.style.cursor = 'grab'; }
+  if (e.key === 'z' || e.key === 'Z') undoPoint();
+});
+window.addEventListener('keyup', (e) => {
+  if (e.code === 'Space') { spaceDown = false; wrap.style.cursor = 'crosshair'; }
+});
+
+function undoPoint() {
+  if (current && current.pts.length) {
+    current.pts.pop();
+    if (!current.pts.length) current = null;
+  } else if (shapes.length) {
+    const last = shapes[shapes.length - 1];
+    last.closed = false;
+    current = shapes.pop();
+  }
+  draw();
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnAdd').classList.toggle('active', m === 'add');
+  document.getElementById('btnSub').classList.toggle('active', m === 'sub');
+  if (current && !current.closed && current.pts.length === 0) current.mode = m;
+}
+document.getElementById('btnAdd').onclick = () => setMode('add');
+document.getElementById('btnSub').onclick = () => setMode('sub');
+document.getElementById('btnSmooth').onclick = function () {
+  smooth = !smooth;
+  this.textContent = '平滑曲线：' + (smooth ? '开' : '关');
+  this.classList.toggle('active', smooth);
+  draw();
+};
+document.getElementById('btnUndo').onclick = undoPoint;
+document.getElementById('btnDelShape').onclick = () => {
+  if (current) current = null;
+  else shapes.pop();
+  draw();
+};
+document.getElementById('btnClear').onclick = () => { shapes = []; current = null; draw(); };
+
+document.getElementById('btnExport').onclick = () => {
+  if (!img) { alert('请先打开图片'); return; }
+  const closedShapes = shapes.filter((s) => s.closed);
+  if (!closedShapes.length) { alert('请先双击闭合至少一个描边区域'); return; }
+  const oc = document.createElement('canvas');
+  oc.width = img.width; oc.height = img.height;
+  const c = oc.getContext('2d');
+  c.fillStyle = '#000';
+  c.fillRect(0, 0, oc.width, oc.height);
+  for (const s of closedShapes) {
+    c.beginPath();
+    pathOf(c, s.pts, true);
+    c.fillStyle = s.mode === 'add' ? '#fff' : '#000';
+    c.fill();
+  }
+  const name = document.getElementById('name').value.trim() || 'object';
+  const a = document.createElement('a');
+  a.download = 'mask-' + name + '.png';
+  a.href = oc.toDataURL('image/png');
+  a.click();
+};
+
+resize();
+</script>
+</body>
+</html>

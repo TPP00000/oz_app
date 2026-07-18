@@ -7,19 +7,28 @@ const app = getApp()
 // 全景图原始比例（2560x1024 横向长图）
 const PANO_RATIO = 2560 / 1024
 
-// 树精灵在全景图中的区域（由差异抠图输出，与精灵图逐像素对应）
-const TREE_RECT = { left: 21.99, top: 47.85, width: 10.04, height: 31.54 }
+// 树精灵：热区=本体（树+盆），图像=含阴影完整范围（img 为相对热区的百分比偏移）
+const TREE_RECT = { left: 22.07, top: 48.24, width: 7.77, height: 29.59 }
+const TREE_IMG = { left: 0, top: 0, width: 100, height: 100 }
 
-// 未来可交互物件的占位热区（百分比人工标定，点击提示"装修中"）
+// 可交互物件精灵（坐标由抠图/裁切脚本输出）
+// hot 区=本体可点击范围；img=精灵图相对热区的摆放（含阴影，超出热区部分不可点击）
+const SPRITES = [
+  { key: 'window', name: '窗户', src: 'sp-window.webp', left: 0, top: 0.1, width: 13.28, height: 78.22, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'bookshelf', name: '书柜', src: 'sp-bookshelf.webp', left: 13.01, top: 18.46, width: 11.72, height: 55.57, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'kitchen', name: '厨房', src: 'sp-kitchen.webp', left: 26.6, top: 22.27, width: 11.09, height: 47.36, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'notebook', name: '手账本', src: 'sp-notebook.webp', left: 27.89, top: 70.51, width: 9.57, height: 9.57, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'painting', name: '挂画', src: 'sp-painting.webp', left: 42.34, top: 25.59, width: 6.76, height: 19.63, img: { left: -1.2, top: 0, width: 102.3, height: 101 } },
+  { key: 'eggBig', name: '大茄子', src: 'sp-egg-big.webp', left: 40.31, top: 49.02, width: 6.25, height: 19.43, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'eggSmall', name: '小茄子', src: 'sp-egg-small.webp', left: 44.88, top: 54.79, width: 4.69, height: 14.55, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'shelf', name: '置物架', src: 'sp-shelf.webp', left: 51.33, top: 27.83, width: 8.67, height: 60.84, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'doorBig', name: '大茄子的房间', src: 'sp-door-big.webp', left: 63.28, top: 12.99, width: 13.79, height: 74.9, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'doorSmall', name: '小茄子的房间', src: 'sp-door-small.webp', left: 82.81, top: 13.18, width: 14.8, height: 77.44, img: { left: 0, top: 0, width: 100, height: 100 } }
+]
+
+// 尚未精灵化的占位热区（椭圆柔光反馈）
 const PLACEHOLDERS = [
-  { key: 'window', name: '窗户', left: 0.5, top: 5, width: 8.5, height: 52 },
-  { key: 'bookshelf', name: '书柜', left: 11.6, top: 20, width: 7, height: 53 },
-  { key: 'kitchen', name: '厨房', left: 21, top: 19, width: 8.5, height: 51 },
-  { key: 'sofa', name: '沙发', left: 27.7, top: 44, width: 14, height: 24 },
-  { key: 'painting', name: '挂画', left: 34, top: 22, width: 5, height: 14 },
-  { key: 'shelf', name: '置物架', left: 41.5, top: 28, width: 6.5, height: 46 },
-  { key: 'doorBig', name: '大茄子的房间', left: 51.5, top: 12, width: 9.6, height: 62 },
-  { key: 'doorSmall', name: '小茄子的房间', left: 67.2, top: 12, width: 9.4, height: 62 }
+  { key: 'sofa', name: '沙发', left: 35.2, top: 50.8, width: 16.2, height: 28.8 }
 ]
 
 Page({
@@ -34,6 +43,8 @@ Page({
     scrollLeft: 0,
     chipTop: 40,
     treeRect: TREE_RECT,
+    treeImg: TREE_IMG,
+    sprites: SPRITES,
     placeholders: PLACEHOLDERS
   },
 
