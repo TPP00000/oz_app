@@ -7,8 +7,8 @@ const app = getApp()
 // 全景图原始比例（1536x1024）
 const PANO_RATIO = 1536 / 1024
 
-// 树在全景图中的区域（百分比，按当前 room-pano-day.jpg 人工标定）
-const TREE_RECT = { left: 38, top: 36, width: 21, height: 41 }
+// 树精灵在全景图中的区域（由 scripts/extract_sprite.py 输出，与精灵图逐像素对应）
+const TREE_RECT = { left: 38.54, top: 35.84, width: 25.26, height: 44.04 }
 
 // 未来可交互物件的占位热区（百分比人工标定，点击提示"装修中"）
 const PLACEHOLDERS = [
@@ -45,7 +45,7 @@ Page({
     return {
       title: '茄茄小屋 · 我们俩的专属小屋',
       path: '/pages/index/index',
-      imageUrl: '/assets/room-pano-day.jpg'
+      imageUrl: '/assets/share-card.jpg'
     }
   },
 

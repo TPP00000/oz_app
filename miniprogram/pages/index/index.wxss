@@ -65,6 +65,30 @@
   z-index: 2;
 }
 
+/* 树精灵：从场景图中抠出的图层，静止时与背景逐像素重合 */
+.tree-sprite {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 92%;
+  transition: transform 0.25s ease;
+}
+
+/* 按住时整棵树轻轻呼吸 */
+.tree-pressed .tree-sprite {
+  animation: sprite-breathe 1.1s ease-in-out infinite;
+}
+
+@keyframes sprite-breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 /* 待回答角标：安静的小圆点，不做动画 */
 .tree-dot {
   position: absolute;

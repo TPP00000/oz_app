@@ -19,7 +19,7 @@
     scroll-left="{{scrollLeft}}"
   >
     <view class="pano" style="width: {{panoWidth}}px; height: {{panoHeight}}px;">
-      <image class="pano-img" src="/assets/room-pano-day.jpg" />
+      <image class="pano-img" src="/assets/room-pano-empty.jpg" />
 
       <!-- 占位物件：平时隐形，按下柔光缓缓浮现，点击提示装修中 -->
       <view
@@ -35,15 +35,15 @@
         <view class="glow"></view>
       </view>
 
-      <!-- 愿望树：按下时金色柔光缓缓浮现 -->
+      <!-- 愿望树精灵：静止时与背景逐像素还原，按下时整棵树呼吸缩放 -->
       <view
         class="hotspot tree-hotspot"
-        hover-class="hotspot-hover"
+        hover-class="tree-pressed"
         hover-stay-time="250"
         style="left: {{treeRect.left}}%; top: {{treeRect.top}}%; width: {{treeRect.width}}%; height: {{treeRect.height}}%;"
         bindtap="goTree"
       >
-        <view class="glow glow-gold"></view>
+        <image class="tree-sprite" src="/assets/tree-sprite.webp" mode="scaleToFill" />
         <view class="tree-dot" wx:if="{{pendingForMe > 0}}">{{pendingForMe}}</view>
       </view>
     </view>

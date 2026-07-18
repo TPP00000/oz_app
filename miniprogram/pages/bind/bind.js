@@ -33,7 +33,7 @@ Page({
       path: code
         ? `/pages/index/index?invite=${encodeURIComponent(code)}`
         : '/pages/index/index',
-      imageUrl: '/assets/room-pano-day.jpg'
+      imageUrl: '/assets/share-card.jpg'
     }
   },
 

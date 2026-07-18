@@ -1,14 +1,11 @@
-// scripts/edit-room.mjs - 图生图局部修改全景图（本地工具）
-// 用法: node scripts/edit-room.mjs "修改指令"
-// 保持构图不变地修改 room-pano-day.jpg，修改前自动备份为 room-pano-day.bak.jpg
-import { readFileSync, writeFileSync, copyFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+// scripts/edit-image.mjs - 图生图工具（本地工具，不属于小程序运行时）
+// 用法: node scripts/edit-image.mjs <输入图路径> <输出图路径> "修改指令"
+// 保持构图不变地按指令修改图片（gpt-image-2 edits，约 $0.04/次）
+import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const TARGET = join(ROOT, 'miniprogram', 'assets', 'room-pano-day.jpg')
-// 备份放在项目根目录（miniprogram/ 之外），避免被打进小程序包
-const BACKUP = join(ROOT, 'room-pano-day.bak.jpg')
 
 function loadApiKey() {
   const env = readFileSync(join(ROOT, '.env'), 'utf8')
@@ -20,24 +17,25 @@ function loadApiKey() {
 }
 
 async function main() {
-  const instruction = process.argv[2]
-  if (!instruction) {
-    throw new Error('用法: node scripts/edit-room.mjs "修改指令"')
+  const [input, output, instruction] = process.argv.slice(2)
+  if (!input || !output || !instruction) {
+    throw new Error('用法: node scripts/edit-image.mjs <输入图> <输出图> "修改指令"')
   }
   const apiKey = loadApiKey()
 
-  copyFileSync(TARGET, BACKUP)
-
+  const isJpeg = ['.jpg', '.jpeg'].includes(extname(output).toLowerCase())
   const form = new FormData()
   form.append('model', 'gpt-image-2')
   form.append('prompt', instruction)
   form.append('size', '1536x1024')
-  form.append('output_format', 'jpeg')
-  form.append('output_compression', '88')
+  form.append('output_format', isJpeg ? 'jpeg' : 'png')
+  if (isJpeg) {
+    form.append('output_compression', '88')
+  }
   form.append(
     'image',
-    new Blob([readFileSync(TARGET)], { type: 'image/jpeg' }),
-    'room-pano-day.jpg'
+    new Blob([readFileSync(input)], { type: 'image/jpeg' }),
+    'input.jpg'
   )
 
   const res = await fetch('https://api.openai.com/v1/images/edits', {
@@ -55,8 +53,8 @@ async function main() {
     throw new Error('返回中没有图片数据')
   }
   const buf = Buffer.from(b64, 'base64')
-  writeFileSync(TARGET, buf)
-  process.stdout.write(`OK 已更新 (${Math.round(buf.length / 1024)}KB)，原图备份在 room-pano-day.bak.jpg\n`)
+  writeFileSync(output, buf)
+  process.stdout.write(`OK ${output} (${Math.round(buf.length / 1024)}KB)\n`)
 }
 
 main().catch((err) => {
