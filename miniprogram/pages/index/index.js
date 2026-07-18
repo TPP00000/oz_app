@@ -19,10 +19,10 @@ const SPRITES = [
   { key: 'kitchen', name: '厨房', src: 'sp-kitchen.png', left: 26.41, top: 21.78, width: 11.29, height: 48.44, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'notebook', name: '手账本', src: 'sp-notebook.png', left: 27.89, top: 70.51, width: 9.57, height: 9.57, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'painting', name: '挂画', src: 'sp-painting.png', left: 42.34, top: 25.59, width: 6.76, height: 19.63, img: { left: -1.2, top: 0, width: 102.3, height: 101 } },
-  { key: 'eggBig', name: '大茄子', src: 'sp-egg-big.png', left: 40.31, top: 49.02, width: 6.25, height: 19.43, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'eggBig', name: '茄子王', src: 'sp-egg-big.png', left: 40.31, top: 49.02, width: 6.25, height: 19.43, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'eggSmall', name: '小茄子', src: 'sp-egg-small.png', left: 44.88, top: 54.79, width: 4.69, height: 14.55, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'shelf', name: '置物架', src: 'sp-shelf.png', left: 51.33, top: 27.83, width: 8.95, height: 60.84, img: { left: 0, top: 0, width: 100, height: 100 } },
-  { key: 'doorBig', name: '大茄子的房间', src: 'sp-door-big.png', left: 63.28, top: 12.99, width: 13.79, height: 74.9, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'doorBig', name: '茄子王的房间', src: 'sp-door-big.png', left: 63.28, top: 12.99, width: 13.79, height: 74.9, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'doorSmall', name: '小茄子的房间', src: 'sp-door-small.png', left: 82.81, top: 13.18, width: 14.8, height: 77.44, img: { left: 0, top: 0, width: 100, height: 100 } }
 ]
 

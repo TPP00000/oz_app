@@ -14,118 +14,106 @@
   z-index: -1;
 }
 
-/* 场景 */
+/* 成长树 */
 .scene {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.tree-wrap {
-  position: relative;
-  width: 560rpx;
+  padding-top: 8rpx;
 }
 
 .tree {
-  width: 100%;
-  filter: drop-shadow(0 12rpx 28rpx rgba(120, 90, 60, 0.25));
+  width: 340rpx;
+  filter: drop-shadow(0 10rpx 22rpx rgba(120, 90, 60, 0.22));
 }
 
-/* 果子 */
-.fruit {
-  position: absolute;
-  width: 84rpx;
-  z-index: 2;
-  transition: transform 0.15s ease;
+.stage-chip {
+  margin-top: 12rpx;
+  background: var(--color-paper);
+  border: 3rpx solid var(--color-line);
+  border-radius: 999rpx;
+  padding: 8rpx 30rpx;
+  font-size: 25rpx;
+  color: var(--color-ink);
+  box-shadow: 0 5rpx 0 rgba(170, 130, 90, 0.22),
+    inset 0 3rpx 0 rgba(255, 255, 255, 0.8);
 }
 
-.fruit:active {
-  transform: scale(1.2);
+.grow-text {
+  margin-top: 12rpx;
+  font-size: 23rpx;
+  color: var(--color-ink-soft);
 }
 
-/* 等你回答：金光呼吸 */
-.fruit-waiting {
-  animation: glow 1.6s ease-in-out infinite;
+/* 统计 */
+.stats {
+  margin-top: 26rpx;
+  display: flex;
+  align-items: center;
+  padding: 26rpx 12rpx;
 }
 
-@keyframes glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 6rpx rgba(255, 205, 100, 0.9));
-    transform: scale(1);
-  }
-  50% {
-    filter: drop-shadow(0 0 26rpx rgba(255, 190, 70, 1));
-    transform: scale(1.12);
-  }
+.stat-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
 }
 
-/* 等 TA 回答：半透明未成熟 */
-.fruit-mine {
-  opacity: 0.5;
-  filter: saturate(0.55);
+.stat-num {
+  font-size: 40rpx;
+  color: var(--color-primary-deep);
 }
 
-/* 已成熟：鲜亮 + 落影 */
-.fruit-done {
-  filter: drop-shadow(0 4rpx 10rpx rgba(120, 60, 40, 0.35));
+.stat-label {
+  font-size: 22rpx;
+  color: var(--color-ink-soft);
+}
+
+.stat-divider {
+  width: 3rpx;
+  height: 64rpx;
+  background: var(--color-line);
 }
 
 .plant-btn {
-  margin-top: 24rpx;
-  padding: 20rpx 64rpx;
+  margin: 28rpx auto 0;
+  width: 420rpx;
 }
 
-/* 图例 */
-.legend {
+/* 分类页签 */
+.tabs {
   display: flex;
-  justify-content: center;
-  gap: 28rpx;
-  margin: 32rpx 0;
+  gap: 16rpx;
+  margin: 34rpx 0 20rpx;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  font-size: 22rpx;
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: 26rpx;
   color: var(--color-ink-soft);
-  background: var(--color-paper);
+  background: rgba(255, 251, 240, 0.6);
   border: 3rpx solid var(--color-line);
-  padding: 8rpx 18rpx;
   border-radius: 999rpx;
 }
 
-.dot {
-  width: 18rpx;
-  height: 18rpx;
-  border-radius: 50%;
-}
-
-.dot-waiting {
-  background: var(--color-gold);
-  box-shadow: 0 0 8rpx rgba(255, 190, 70, 0.9);
-}
-
-.dot-mine {
-  background: #B9A7D6;
-  opacity: 0.7;
-}
-
-.dot-done {
-  background: #C25E75;
+.tab-active {
+  background: linear-gradient(135deg, #fbc29b, #f09372);
+  border-color: rgba(150, 90, 55, 0.55);
+  color: #fff;
+  text-shadow: 0 2rpx 0 rgba(140, 80, 50, 0.3);
+  box-shadow: 0 5rpx 0 rgba(170, 110, 70, 0.35),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.4);
 }
 
 /* 列表 */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
-}
-
-.list-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  margin-bottom: 8rpx;
+  gap: 18rpx;
 }
 
 .list-item {
@@ -133,15 +121,10 @@
   align-items: center;
   gap: 20rpx;
   padding: 26rpx 30rpx;
-  background: var(--color-paper);
-  border: 3rpx solid var(--color-line);
-  border-radius: 28rpx;
-  box-shadow: 0 8rpx 20rpx rgba(140, 100, 60, 0.1),
-    inset 0 4rpx 0 rgba(255, 255, 255, 0.8);
 }
 
 .list-icon {
-  width: 48rpx;
+  width: 46rpx;
   flex-shrink: 0;
 }
 
@@ -155,24 +138,19 @@
 
 .list-tag {
   flex-shrink: 0;
-  font-size: 22rpx;
-  padding: 6rpx 20rpx;
+  font-size: 21rpx;
+  padding: 6rpx 18rpx;
   border-radius: 20rpx;
 }
 
-.tag-waiting {
-  background: #F8E8C6;
-  color: #9C6F2B;
-}
-
-.tag-mine {
-  background: #E7E0F0;
-  color: #7B62A8;
+.tag-pending {
+  background: #f8e8c6;
+  color: #9c6f2b;
 }
 
 .tag-done {
-  background: #F8DFE4;
-  color: #C25E75;
+  background: #f8dfe4;
+  color: #c25e75;
 }
 
 /* 空状态 */

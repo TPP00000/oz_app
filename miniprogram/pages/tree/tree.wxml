@@ -8,50 +8,68 @@
   </view>
   <image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
 
-  <!-- 树的场景 -->
+  <!-- 成长树 -->
   <view class="scene">
-    <view class="tree-wrap">
-      <image class="tree" src="/assets/tree-bare-day.png" mode="widthFix" />
-      <image
-        wx:for="{{fruits}}"
-        wx:key="id"
-        class="fruit fruit-{{item.status}}"
-        src="/assets/fruit-{{item.species}}.png"
-        mode="widthFix"
-        style="left: {{item.left}}%; top: {{item.top}}%;"
-        data-id="{{item.id}}"
-        bindtap="onTapFruit"
-      />
+    <image class="tree" src="{{treeSrc}}" mode="widthFix" />
+    <view class="stage-chip">Lv.{{stage}} {{stageName}}</view>
+    <text class="grow-text">{{growText}}</text>
+  </view>
+
+  <!-- 双方数据统计 -->
+  <view class="stats card">
+    <view class="stat-cell">
+      <text class="stat-num">{{stats.askedByMe}}</text>
+      <text class="stat-label">我提问</text>
     </view>
-    <view class="btn-primary plant-btn" hover-class="btn-pressed" bindtap="onPlant">🌱 种一个问题</view>
+    <view class="stat-cell">
+      <text class="stat-num">{{stats.answeredByMe}}</text>
+      <text class="stat-label">我回答</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-cell">
+      <text class="stat-num">{{stats.askedByTa}}</text>
+      <text class="stat-label">TA 提问</text>
+    </view>
+    <view class="stat-cell">
+      <text class="stat-num">{{stats.answeredByTa}}</text>
+      <text class="stat-label">TA 回答</text>
+    </view>
   </view>
 
-  <!-- 图例 -->
-  <view class="legend">
-    <view class="legend-item"><view class="dot dot-waiting"></view><text>发光＝等你回答</text></view>
-    <view class="legend-item"><view class="dot dot-mine"></view><text>半透明＝等 TA</text></view>
-    <view class="legend-item"><view class="dot dot-done"></view><text>鲜亮＝已成熟</text></view>
-  </view>
+  <view class="btn-primary plant-btn" hover-class="btn-pressed" bindtap="onPlant">🌱 种一个问题</view>
 
-  <!-- 果子列表 -->
-  <view class="list" wx:if="{{allCards.length > 0}}">
-    <text class="list-title">全部愿望果 ({{allCards.length}})</text>
+  <!-- 问答分类 -->
+  <view class="tabs">
     <view
-      wx:for="{{allCards}}"
+      class="tab {{activeTab === 'forMe' ? 'tab-active' : ''}}"
+      data-tab="forMe"
+      bindtap="onSwitchTab"
+    >TA 问我的 ({{listForMe.length}})</view>
+    <view
+      class="tab {{activeTab === 'byMe' ? 'tab-active' : ''}}"
+      data-tab="byMe"
+      bindtap="onSwitchTab"
+    >我问 TA 的 ({{listByMe.length}})</view>
+  </view>
+
+  <view class="list">
+    <view
+      wx:for="{{activeTab === 'forMe' ? listForMe : listByMe}}"
       wx:key="id"
-      class="list-item"
+      class="list-item card"
+      hover-class="btn-pressed"
       data-id="{{item.id}}"
-      bindtap="onTapFruit"
+      bindtap="onTapCard"
     >
       <image class="list-icon" src="/assets/fruit-{{item.species}}.png" mode="widthFix" />
       <text class="list-q">{{item.question}}</text>
       <text class="list-tag tag-{{item.status}}">{{item.statusText}}</text>
     </view>
-  </view>
 
-  <view class="empty" wx:if="{{allCards.length === 0}}">
-    <text>树上还光秃秃的～</text>
-    <text>种下第一个问题，等 TA 来回答吧</text>
+    <view class="empty" wx:if="{{(activeTab === 'forMe' ? listForMe : listByMe).length === 0}}">
+      <text wx:if="{{activeTab === 'forMe'}}">TA 还没有问过你问题～</text>
+      <text wx:else>你还没有问过 TA 问题，去种一个吧 🌱</text>
+    </view>
   </view>
 </view>
 

@@ -1,28 +1,25 @@
-// pages/tree/tree.js - 茄茄愿望树页
+// pages/tree/tree.js - 茄茄愿望树页（成长树 + 分类问答）
 const api = require('../../utils/api')
 const ui = require('../../utils/ui')
+const { TREE_STAGE_PREFIX } = require('../../config')
 
-// 树冠区域内最多挂 8 颗果子的固定位置（相对树容器的百分比）
-const FRUIT_SLOTS = [
-  { left: 16, top: 8 },
-  { left: 56, top: 5 },
-  { left: 34, top: 18 },
-  { left: 70, top: 16 },
-  { left: 8, top: 28 },
-  { left: 46, top: 30 },
-  { left: 74, top: 34 },
-  { left: 26, top: 42 }
-]
-
-const MAX_TREE_FRUITS = FRUIT_SLOTS.length
+// 成长档位：问题总数达到阈值即升档
+const STAGE_THRESHOLDS = [10, 50, 100, 300, 500]
+const STAGE_NAMES = ['嫩芽', '小树苗', '小小树', '茂盛树', '繁花树', '参天树']
 
 Page({
   data: {
     loading: true,
     refreshing: false,
-    fruits: [],
-    allCards: [],
-    safeTop: 20
+    safeTop: 20,
+    treeSrc: '',
+    stageName: '',
+    stage: 0,
+    growText: '',
+    stats: { askedByMe: 0, askedByTa: 0, answeredByMe: 0, answeredByTa: 0, total: 0 },
+    activeTab: 'forMe',
+    listForMe: [],
+    listByMe: []
   },
 
   onLoad() {
@@ -42,7 +39,6 @@ Page({
   },
 
   async loadCards() {
-    // 首次进入显示全屏加载；之后返回页面时只在后台静默刷新
     const firstLoad = !this.hasLoaded
     if (firstLoad) {
       this.setData({ loading: true })
@@ -51,45 +47,61 @@ Page({
     }
     try {
       const cards = await api.call('card.list')
-      const allCards = cards.map((card) => ({
-        id: card.id,
-        question: card.question,
-        // 旧数据没有品种字段时按苹果显示（与云函数兜底一致）
-        species: card.species || 'apple',
-        status: this.fruitStatus(card),
-        statusText: this.statusText(card)
-      }))
-      const fruits = allCards.slice(0, MAX_TREE_FRUITS).map((card, i) => ({
-        id: card.id,
-        left: FRUIT_SLOTS[i].left,
-        top: FRUIT_SLOTS[i].top,
-        species: card.species,
-        status: card.status
-      }))
       this.hasLoaded = true
-      this.setData({ loading: false, refreshing: false, fruits, allCards })
+      this.setData({
+        loading: false,
+        refreshing: false,
+        ...this.buildView(cards)
+      })
     } catch (err) {
       this.setData({ loading: false, refreshing: false })
       ui.showError(this, err)
     }
   },
 
-  // waiting: 对方问我、待我回答 / mine: 我问对方、等 TA / done: 已完成
-  fruitStatus(card) {
-    if (card.status === 'answered') {
-      return 'done'
+  buildView(cards) {
+    const total = cards.length
+    const stage = STAGE_THRESHOLDS.filter((t) => total >= t).length
+    const growText =
+      stage >= STAGE_THRESHOLDS.length
+        ? '愿望树已经长到最大啦'
+        : `再种 ${STAGE_THRESHOLDS[stage] - total} 个问题就会长大`
+
+    const stats = {
+      total,
+      askedByMe: cards.filter((c) => c.askedByMe).length,
+      askedByTa: cards.filter((c) => !c.askedByMe).length,
+      answeredByMe: cards.filter((c) => !c.askedByMe && c.status === 'answered').length,
+      answeredByTa: cards.filter((c) => c.askedByMe && c.status === 'answered').length
     }
-    return card.askedByMe ? 'mine' : 'waiting'
+
+    const toItem = (card) => ({
+      id: card.id,
+      question: card.question,
+      species: card.species || 'apple',
+      status: card.status === 'answered' ? 'done' : 'pending',
+      statusText:
+        card.status === 'answered' ? '已成熟' : card.askedByMe ? '等 TA 回答' : '等你回答'
+    })
+
+    return {
+      treeSrc: TREE_STAGE_PREFIX
+        ? `${TREE_STAGE_PREFIX}stage-${stage}.png`
+        : '/assets/tree-bare-day.png',
+      stage,
+      stageName: STAGE_NAMES[stage],
+      growText,
+      stats,
+      listForMe: cards.filter((c) => !c.askedByMe).map(toItem),
+      listByMe: cards.filter((c) => c.askedByMe).map(toItem)
+    }
   },
 
-  statusText(card) {
-    if (card.status === 'answered') {
-      return '已成熟'
-    }
-    return card.askedByMe ? '等 TA 回答' : '等你回答'
+  onSwitchTab(e) {
+    this.setData({ activeTab: e.currentTarget.dataset.tab })
   },
 
-  onTapFruit(e) {
+  onTapCard(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: `/pages/card/card?id=${id}` })
   },
