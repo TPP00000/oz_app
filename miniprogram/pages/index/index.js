@@ -4,20 +4,22 @@ const ui = require('../../utils/ui')
 
 const app = getApp()
 
-// 全景图原始比例（1536x1024）
-const PANO_RATIO = 1536 / 1024
+// 全景图原始比例（2560x1024 横向长图）
+const PANO_RATIO = 2560 / 1024
 
-// 树精灵在全景图中的区域（由 scripts/extract_sprite.py 输出，与精灵图逐像素对应）
-const TREE_RECT = { left: 38.54, top: 35.84, width: 25.26, height: 44.04 }
+// 树精灵在全景图中的区域（由差异抠图输出，与精灵图逐像素对应）
+const TREE_RECT = { left: 21.8, top: 44.92, width: 12.07, height: 35.45 }
 
 // 未来可交互物件的占位热区（百分比人工标定，点击提示"装修中"）
 const PLACEHOLDERS = [
-  { key: 'window', name: '窗户', left: 0.5, top: 2, width: 21, height: 58 },
-  { key: 'plant', name: '绿植', left: 0, top: 60, width: 9.5, height: 29 },
-  { key: 'bookshelf', name: '书柜', left: 25.7, top: 14, width: 21, height: 63 },
-  { key: 'sofa', name: '沙发', left: 55.5, top: 47, width: 32, height: 40 },
-  { key: 'painting', name: '挂画', left: 66.5, top: 16.5, width: 15.5, height: 23 },
-  { key: 'shelf', name: '置物架', left: 84.5, top: 10, width: 15.5, height: 75 }
+  { key: 'window', name: '窗户', left: 0.5, top: 5, width: 8.5, height: 52 },
+  { key: 'bookshelf', name: '书柜', left: 11.6, top: 20, width: 7, height: 53 },
+  { key: 'kitchen', name: '厨房', left: 21, top: 19, width: 8.5, height: 51 },
+  { key: 'sofa', name: '沙发', left: 27.7, top: 44, width: 14, height: 24 },
+  { key: 'painting', name: '挂画', left: 34, top: 22, width: 5, height: 14 },
+  { key: 'shelf', name: '置物架', left: 41.5, top: 28, width: 6.5, height: 46 },
+  { key: 'doorBig', name: '大茄子的房间', left: 51.5, top: 12, width: 9.6, height: 62 },
+  { key: 'doorSmall', name: '小茄子的房间', left: 67.2, top: 12, width: 9.4, height: 62 }
 ]
 
 Page({

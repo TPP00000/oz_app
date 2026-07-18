@@ -1,6 +1,7 @@
 // scripts/edit-image.mjs - 图生图工具（本地工具，不属于小程序运行时）
-// 用法: node scripts/edit-image.mjs <输入图路径> <输出图路径> "修改指令"
+// 用法: node scripts/edit-image.mjs <输入图路径> <输出图路径> "修改指令" [蒙版png路径]
 // 保持构图不变地按指令修改图片（gpt-image-2 edits，约 $0.04/次）
+// 蒙版：透明区域=允许重绘，不透明区域=保持原样
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -17,9 +18,9 @@ function loadApiKey() {
 }
 
 async function main() {
-  const [input, output, instruction] = process.argv.slice(2)
+  const [input, output, instruction, maskPath] = process.argv.slice(2)
   if (!input || !output || !instruction) {
-    throw new Error('用法: node scripts/edit-image.mjs <输入图> <输出图> "修改指令"')
+    throw new Error('用法: node scripts/edit-image.mjs <输入图> <输出图> "修改指令" [蒙版png]')
   }
   const apiKey = loadApiKey()
 
@@ -37,6 +38,13 @@ async function main() {
     new Blob([readFileSync(input)], { type: 'image/jpeg' }),
     'input.jpg'
   )
+  if (maskPath) {
+    form.append(
+      'mask',
+      new Blob([readFileSync(maskPath)], { type: 'image/png' }),
+      'mask.png'
+    )
+  }
 
   const res = await fetch('https://api.openai.com/v1/images/edits', {
     method: 'POST',

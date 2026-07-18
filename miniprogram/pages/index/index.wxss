@@ -10,11 +10,11 @@
   width: 100%;
   height: 100%;
   /* 兜底：越界空隙显示与全景图边缘取样一致的渐变（墙面→地板），肉眼无感 */
-  background: linear-gradient(180deg, #C6A061 0%, #C6A061 35%, #9F7F44 55%, #7C5622 100%);
+  background: linear-gradient(180deg, #D6B788 0%, #D6B788 35%, #DCBF8F 55%, #96723D 100%);
 }
 
 .home {
-  background: linear-gradient(180deg, #C6A061 0%, #C6A061 35%, #9F7F44 55%, #7C5622 100%);
+  background: linear-gradient(180deg, #D6B788 0%, #D6B788 35%, #DCBF8F 55%, #96723D 100%);
 }
 
 .pano {
