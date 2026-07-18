@@ -29,6 +29,14 @@ Page({
     this.setData({ safeTop: ui.safeTop() })
   },
 
+  onShareAppMessage() {
+    return {
+      title: '茄茄小屋 · 我们俩的专属小屋',
+      path: '/pages/index/index',
+      imageUrl: '/assets/room-pano-day.jpg'
+    }
+  },
+
   onShow() {
     this.loadCards()
   },

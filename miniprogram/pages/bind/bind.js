@@ -14,8 +14,27 @@ Page({
     safeTop: 20
   },
 
-  onLoad() {
+  onLoad(options) {
     this.setData({ safeTop: ui.safeTop() })
+    // 从分享链接进入时自动填入对方的邀请码
+    if (options && options.invite) {
+      this.setData({ inputCode: options.invite })
+      ui.toast(this, '已帮你填好 TA 的邀请码，点绑定就行啦')
+    }
+  },
+
+  // 分享给对方：带上自己的邀请码，对方点开即自动填码
+  onShareAppMessage() {
+    const code = this.data.inviteCode
+    return {
+      title: code
+        ? '来茄茄小屋和我绑定吧，就差你啦'
+        : '茄茄小屋 · 我们俩的专属小屋',
+      path: code
+        ? `/pages/index/index?invite=${encodeURIComponent(code)}`
+        : '/pages/index/index',
+      imageUrl: '/assets/room-pano-day.jpg'
+    }
   },
 
   async onCreateInvite() {
