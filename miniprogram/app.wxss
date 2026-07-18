@@ -87,7 +87,7 @@ page {
 .refresh-tip {
   position: fixed;
   left: 50%;
-  top: 24vh;
+  top: 30vh;
   transform: translateX(-50%);
   z-index: 50;
   opacity: 0.55;

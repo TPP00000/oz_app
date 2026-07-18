@@ -53,11 +53,14 @@
     <view class="spinner"></view>
   </view>
 
-  <view class="header-chip" style="top: {{chipTop}}px">
-    <image class="title-img" src="/assets/title.png" mode="widthFix" />
-    <view class="subtitle">
-      <text>在一起的第 {{daysTogether}} 天</text>
-      <image class="heart-icon" src="/assets/heart.png" mode="widthFix" />
+  <view class="header-board" style="top: {{chipTop}}px">
+    <image class="board-bg" src="/assets/board.png" mode="widthFix" />
+    <view class="board-content">
+      <image class="title-img" src="/assets/title.png" mode="widthFix" />
+      <view class="subtitle">
+        <text>一起在小屋的第 {{daysTogether}} 天</text>
+        <image class="heart-icon" src="/assets/heart.png" mode="widthFix" />
+      </view>
     </view>
   </view>
 </view>

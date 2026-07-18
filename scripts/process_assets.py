@@ -24,11 +24,14 @@ TARGETS = {
     "fruit-apple.png": {"width": 240},
     "heart.png": {"width": 160},
     "house-eggplant.png": {"width": 480},
+    "board.png": {"width": 640, "big_white": True},
     "title.png": {"width": 640, "all_white": True},
 }
 
 
-def remove_white_bg(img: Image.Image, all_white: bool = False) -> Image.Image:
+def remove_white_bg(
+    img: Image.Image, all_white: bool = False, big_white: bool = False
+) -> Image.Image:
     rgba = np.array(img.convert("RGBA"), dtype=np.uint8)
     h, w = rgba.shape[:2]
     near_white = np.all(rgba[:, :, :3] >= WHITE_THRESHOLD, axis=2)
@@ -36,6 +39,12 @@ def remove_white_bg(img: Image.Image, all_white: bool = False) -> Image.Image:
     if all_white:
         # 文字模式：所有近白像素一律透明（包括笔画包住的字腔）
         rgba[near_white, 3] = 0
+        return _feather_edges(rgba)
+
+    if big_white:
+        # 大块白模式：按连通块判断——触边或面积大的白色区域删除（如绳圈内的留白），
+        # 小块白色（花瓣、高光）保留
+        rgba[_find_big_white(near_white), 3] = 0
         return _feather_edges(rgba)
 
     # BFS：只移除与边缘连通的白色区域（保留主体内部的白色高光）
@@ -60,6 +69,34 @@ def remove_white_bg(img: Image.Image, all_white: bool = False) -> Image.Image:
 
     rgba[visited, 3] = 0
     return _feather_edges(rgba)
+
+
+def _find_big_white(near_white: np.ndarray, min_area: int = 800) -> np.ndarray:
+    """标记需要删除的白色连通块：触及图片边缘的，或面积不小于 min_area 的"""
+    h, w = near_white.shape
+    visited = np.zeros((h, w), dtype=bool)
+    removal = np.zeros((h, w), dtype=bool)
+    for sy in range(h):
+        for sx in range(w):
+            if not near_white[sy, sx] or visited[sy, sx]:
+                continue
+            queue = deque([(sy, sx)])
+            visited[sy, sx] = True
+            component = [(sy, sx)]
+            touches_border = False
+            while queue:
+                y, x = queue.popleft()
+                if y in (0, h - 1) or x in (0, w - 1):
+                    touches_border = True
+                for ny, nx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+                    if 0 <= ny < h and 0 <= nx < w and near_white[ny, nx] and not visited[ny, nx]:
+                        visited[ny, nx] = True
+                        queue.append((ny, nx))
+                        component.append((ny, nx))
+            if touches_border or len(component) >= min_area:
+                for y, x in component:
+                    removal[y, x] = True
+    return removal
 
 
 def _feather_edges(rgba: np.ndarray) -> Image.Image:
@@ -114,7 +151,11 @@ def main() -> None:
     for name, conf in targets.items():
         path = ASSETS / name
         img = Image.open(path)
-        img = remove_white_bg(img, all_white=conf.get("all_white", False))
+        img = remove_white_bg(
+            img,
+            all_white=conf.get("all_white", False),
+            big_white=conf.get("big_white", False),
+        )
         img = crop_and_resize(img, conf["width"])
         img = compress_png(img)
         img.save(path, optimize=True)

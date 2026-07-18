@@ -84,39 +84,51 @@
 }
 
 /* 标题浮层 */
-/* 磨砂玻璃质感标题条：半透明、无硬边，融进画面 */
-.header-chip {
+/* 水彩木质挂牌标题（与插画同风格） */
+.header-board {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+  width: 460rpx;
+  filter: drop-shadow(0 8rpx 16rpx rgba(120, 85, 50, 0.25));
+}
+
+.board-bg {
+  width: 100%;
+  display: block;
+}
+
+/* 内容对齐到木板板面区域（板面约占图片纵向 30%~84%） */
+.board-content {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 30%;
+  bottom: 16%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 249, 238, 0.5);
-  border-radius: 999rpx;
-  padding: 20rpx 50rpx 16rpx;
-  backdrop-filter: blur(16rpx);
-  box-shadow: 0 6rpx 24rpx rgba(120, 85, 50, 0.1);
+  justify-content: center;
+  gap: 4rpx;
 }
 
 .title-img {
-  width: 250rpx;
+  width: 200rpx;
 }
 
 .subtitle {
   display: flex;
   align-items: center;
-  gap: 10rpx;
-  margin-top: 10rpx;
-  font-size: 28rpx;
+  gap: 8rpx;
+  font-size: 23rpx;
   font-weight: 600;
-  color: #7d6650;
-  letter-spacing: 2rpx;
+  color: #6b4a32;
+  letter-spacing: 1rpx;
 }
 
 .heart-icon {
-  width: 40rpx;
+  width: 30rpx;
 }
 
 .retry-box {
