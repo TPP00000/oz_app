@@ -16,12 +16,12 @@ const TREE_IMG = { left: 0, top: 0, width: 100, height: 100 }
 const SPRITES = [
   { key: 'window', name: '窗户', src: 'sp-window.webp', left: 0, top: 0.1, width: 13.28, height: 78.22, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'bookshelf', name: '书柜', src: 'sp-bookshelf.webp', left: 13.01, top: 18.46, width: 11.72, height: 55.57, img: { left: 0, top: 0, width: 100, height: 100 } },
-  { key: 'kitchen', name: '厨房', src: 'sp-kitchen.webp', left: 26.6, top: 22.27, width: 11.09, height: 47.36, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'kitchen', name: '厨房', src: 'sp-kitchen.webp', left: 26.41, top: 21.78, width: 11.29, height: 48.44, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'notebook', name: '手账本', src: 'sp-notebook.webp', left: 27.89, top: 70.51, width: 9.57, height: 9.57, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'painting', name: '挂画', src: 'sp-painting.webp', left: 42.34, top: 25.59, width: 6.76, height: 19.63, img: { left: -1.2, top: 0, width: 102.3, height: 101 } },
   { key: 'eggBig', name: '大茄子', src: 'sp-egg-big.webp', left: 40.31, top: 49.02, width: 6.25, height: 19.43, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'eggSmall', name: '小茄子', src: 'sp-egg-small.webp', left: 44.88, top: 54.79, width: 4.69, height: 14.55, img: { left: 0, top: 0, width: 100, height: 100 } },
-  { key: 'shelf', name: '置物架', src: 'sp-shelf.webp', left: 51.33, top: 27.83, width: 8.67, height: 60.84, img: { left: 0, top: 0, width: 100, height: 100 } },
+  { key: 'shelf', name: '置物架', src: 'sp-shelf.webp', left: 51.33, top: 27.83, width: 8.95, height: 60.84, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'doorBig', name: '大茄子的房间', src: 'sp-door-big.webp', left: 63.28, top: 12.99, width: 13.79, height: 74.9, img: { left: 0, top: 0, width: 100, height: 100 } },
   { key: 'doorSmall', name: '小茄子的房间', src: 'sp-door-small.webp', left: 82.81, top: 13.18, width: 14.8, height: 77.44, img: { left: 0, top: 0, width: 100, height: 100 } }
 ]
