@@ -1,7 +1,7 @@
 // handlers/photo.js - 照片墙（情侣日常照片）
 const cloud = require('wx-server-sdk')
-const { ok, fail } = require('../lib/response')
-const { validateCaption } = require('../lib/validate')
+const { ok, fail } = require('./response')
+const { validateCaption } = require('./validate')
 const shared = require('./shared')
 
 const db = cloud.database()

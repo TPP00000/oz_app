@@ -3,11 +3,13 @@ const cloud = require('wx-server-sdk')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const userHandlers = require('./handlers/user')
-const coupleHandlers = require('./handlers/couple')
-const cardHandlers = require('./handlers/card')
-const photoHandlers = require('./handlers/photo')
-const { fail } = require('./lib/response')
+const userHandlers = require('./user')
+const coupleHandlers = require('./couple')
+const cardHandlers = require('./card')
+const photoHandlers = require('./photo')
+const noteHandlers = require('./note')
+const avatarHandlers = require('./avatar')
+const { fail } = require('./response')
 
 const ROUTES = {
   'user.init': userHandlers.init,
@@ -20,7 +22,15 @@ const ROUTES = {
   'card.answer': cardHandlers.answer,
   'photo.list': photoHandlers.list,
   'photo.create': photoHandlers.create,
-  'photo.remove': photoHandlers.remove
+  'photo.remove': photoHandlers.remove,
+  'note.list': noteHandlers.list,
+  'note.create': noteHandlers.create,
+  'note.update': noteHandlers.update,
+  'note.remove': noteHandlers.remove,
+  'avatar.state': avatarHandlers.state,
+  'avatar.choose': avatarHandlers.choose,
+  'avatar.style': avatarHandlers.style,
+  'avatar.duo': avatarHandlers.duo
 }
 
 exports.main = async (event) => {

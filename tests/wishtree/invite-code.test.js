@@ -7,7 +7,7 @@ const {
   generateInviteCode,
   normalizeInviteCode,
   isValidInviteCode
-} = require('../lib/invite-code')
+} = require('../../cloudfunctions/wishtree/invite-code')
 
 test('generateInviteCode 生成 6 位、只含合法字符的邀请码', () => {
   for (let i = 0; i < 100; i += 1) {

@@ -1,7 +1,7 @@
 // test/response.test.js
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { ok, fail } = require('../lib/response')
+const { ok, fail } = require('../../cloudfunctions/wishtree/response')
 
 test('ok 返回统一成功格式', () => {
   assert.deepEqual(ok({ a: 1 }), { success: true, data: { a: 1 }, error: null })

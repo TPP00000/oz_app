@@ -8,7 +8,7 @@ const {
   validateQuestion,
   validateAnswer,
   validateCaption
-} = require('../lib/validate')
+} = require('../../cloudfunctions/wishtree/validate')
 
 test('validateQuestion 接受正常问题并去除首尾空格', () => {
   const result = validateQuestion('  你最喜欢的电影是什么？  ')

@@ -1,11 +1,11 @@
 // handlers/user.js - 用户初始化
 const cloud = require('wx-server-sdk')
-const { ok } = require('../lib/response')
+const { ok } = require('./response')
 const shared = require('./shared')
 
 const db = cloud.database()
 
-const COLLECTIONS = ['users', 'couples', 'cards', 'photos']
+const COLLECTIONS = ['users', 'couples', 'cards', 'photos', 'notes']
 
 // 同一云函数实例只需建一次表（冷启动后首次调用执行）
 let collectionsReady = false

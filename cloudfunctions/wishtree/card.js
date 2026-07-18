@@ -1,7 +1,7 @@
 // handlers/card.js - 问答卡片（愿望果）
 const cloud = require('wx-server-sdk')
-const { ok, fail } = require('../lib/response')
-const { validateQuestion, validateAnswer } = require('../lib/validate')
+const { ok, fail } = require('./response')
+const { validateQuestion, validateAnswer } = require('./validate')
 const shared = require('./shared')
 
 const db = cloud.database()

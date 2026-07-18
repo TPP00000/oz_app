@@ -1,12 +1,12 @@
 // handlers/couple.js - 情侣邀请与绑定
 const cloud = require('wx-server-sdk')
-const { ok, fail } = require('../lib/response')
+const { ok, fail } = require('./response')
 const {
   generateInviteCode,
   normalizeInviteCode,
   isValidInviteCode
-} = require('../lib/invite-code')
-const { isBindThrottled, nextFailureState } = require('../lib/throttle')
+} = require('./invite-code')
+const { isBindThrottled, nextFailureState } = require('./throttle')
 const shared = require('./shared')
 
 const db = cloud.database()

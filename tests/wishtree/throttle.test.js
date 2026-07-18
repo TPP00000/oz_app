@@ -6,7 +6,7 @@ const {
   BIND_WINDOW_MS,
   isBindThrottled,
   nextFailureState
-} = require('../lib/throttle')
+} = require('../../cloudfunctions/wishtree/throttle')
 
 const NOW = 1_000_000_000
 
