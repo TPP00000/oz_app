@@ -99,18 +99,18 @@
   display: block;
 }
 
-/* 内容对齐到木板板面区域（板面约占图片纵向 30%~84%） */
+/* 内容对齐到木板板面区域（新板面上下基本对称，约纵向 18%~82%） */
 .board-content {
   position: absolute;
   left: 13%;
   right: 13%;
-  top: 30%;
-  bottom: 16%;
+  top: 18%;
+  bottom: 18%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4rpx;
+  gap: 6rpx;
 }
 
 .title-img {
