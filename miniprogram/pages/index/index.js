@@ -8,7 +8,7 @@ const app = getApp()
 const PANO_RATIO = 2560 / 1024
 
 // 树精灵在全景图中的区域（由差异抠图输出，与精灵图逐像素对应）
-const TREE_RECT = { left: 21.8, top: 44.92, width: 12.07, height: 35.45 }
+const TREE_RECT = { left: 21.99, top: 47.85, width: 10.04, height: 31.54 }
 
 // 未来可交互物件的占位热区（百分比人工标定，点击提示"装修中"）
 const PLACEHOLDERS = [
@@ -122,6 +122,10 @@ Page({
 
   goTree() {
     wx.navigateTo({ url: '/pages/tree/tree' })
+  },
+
+  goOverview() {
+    wx.navigateTo({ url: '/pages/overview/overview' })
   },
 
   onTapPlaceholder(e) {

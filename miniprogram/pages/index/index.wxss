@@ -75,9 +75,13 @@
   transition: transform 0.25s ease;
 }
 
-/* 按住时整棵树轻轻呼吸 */
+/* 按住时整棵树轻轻呼吸 + 身后光晕浮现（确认选中） */
 .tree-pressed .tree-sprite {
   animation: sprite-breathe 1.1s ease-in-out infinite;
+}
+
+.tree-pressed .glow {
+  opacity: 1;
 }
 
 @keyframes sprite-breathe {
@@ -89,11 +93,11 @@
   }
 }
 
-/* 待回答角标：安静的小圆点，不做动画 */
-.tree-dot {
+/* 待回答角标：安静地挂在木牌右上角 */
+.board-dot {
   position: absolute;
-  top: -6rpx;
-  right: -6rpx;
+  top: 16%;
+  right: 8%;
   min-width: 36rpx;
   height: 36rpx;
   padding: 0 8rpx;
@@ -108,14 +112,19 @@
 }
 
 /* 标题浮层 */
-/* 水彩木质挂牌标题（与插画同风格） */
+/* 水彩木质挂牌标题（与插画同风格，可点击进入小屋手账） */
 .header-board {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  width: 460rpx;
+  width: 400rpx;
   filter: drop-shadow(0 8rpx 16rpx rgba(120, 85, 50, 0.25));
+  transition: transform 0.12s ease;
+}
+
+.board-pressed {
+  transform: translateX(-50%) translateY(4rpx) scale(0.98);
 }
 
 .board-bg {
@@ -138,7 +147,7 @@
 }
 
 .title-img {
-  width: 200rpx;
+  width: 176rpx;
 }
 
 .subtitle {

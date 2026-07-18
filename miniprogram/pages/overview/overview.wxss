@@ -1,0 +1,152 @@
+/* pages/overview/overview.wxss */
+.overview {
+  padding: 0 40rpx 80rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+/* 天数 */
+.days {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  padding: 40rpx 36rpx;
+}
+
+.days-title {
+  width: 220rpx;
+}
+
+.days-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10rpx;
+  font-size: 27rpx;
+  color: var(--color-ink);
+}
+
+.days-num {
+  font-size: 52rpx;
+  color: var(--color-primary-deep);
+}
+
+.days-heart {
+  width: 34rpx;
+  align-self: center;
+}
+
+/* 统计 */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.stat {
+  flex: 1 1 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 28rpx 0;
+}
+
+.stat-num {
+  font-size: 44rpx;
+}
+
+.num-waiting {
+  color: #c8912a;
+}
+
+.num-mine {
+  color: #7b62a8;
+}
+
+.num-done {
+  color: #c25e75;
+}
+
+.stat-label {
+  font-size: 23rpx;
+  color: var(--color-ink-soft);
+}
+
+/* 最近动态 */
+.recent {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.recent-title {
+  font-size: 28rpx;
+  margin: 8rpx 0;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx 28rpx;
+}
+
+.recent-icon {
+  width: 46rpx;
+  flex-shrink: 0;
+}
+
+.recent-mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  overflow: hidden;
+}
+
+.recent-q {
+  font-size: 27rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-date {
+  font-size: 21rpx;
+  color: var(--color-ink-soft);
+}
+
+.recent-tag {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+}
+
+.tag-waiting {
+  background: #f8e8c6;
+  color: #9c6f2b;
+}
+
+.tag-mine {
+  background: #e7e0f0;
+  color: #7b62a8;
+}
+
+.tag-done {
+  background: #f8dfe4;
+  color: #c25e75;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 60rpx;
+  color: var(--color-ink-soft);
+  font-size: 26rpx;
+}

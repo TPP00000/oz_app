@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/bind/bind",
     "pages/tree/tree",
-    "pages/card/card"
+    "pages/card/card",
+    "pages/overview/overview"
   ],
   "window": {
     "navigationStyle": "custom",

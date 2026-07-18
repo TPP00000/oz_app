@@ -35,7 +35,7 @@
         <view class="glow"></view>
       </view>
 
-      <!-- 愿望树精灵：静止时与背景逐像素还原，按下时整棵树呼吸缩放 -->
+      <!-- 愿望树精灵：静止时与背景逐像素还原，按下时光晕浮现 + 整棵树呼吸缩放 -->
       <view
         class="hotspot tree-hotspot"
         hover-class="tree-pressed"
@@ -43,8 +43,8 @@
         style="left: {{treeRect.left}}%; top: {{treeRect.top}}%; width: {{treeRect.width}}%; height: {{treeRect.height}}%;"
         bindtap="goTree"
       >
+        <view class="glow glow-gold"></view>
         <image class="tree-sprite" src="/assets/tree-sprite.webp" mode="scaleToFill" />
-        <view class="tree-dot" wx:if="{{pendingForMe > 0}}">{{pendingForMe}}</view>
       </view>
     </view>
   </scroll-view>
@@ -53,7 +53,14 @@
     <view class="spinner"></view>
   </view>
 
-  <view class="header-board" style="top: {{chipTop}}px">
+  <!-- 木牌：点击进入小屋手账（总览页） -->
+  <view
+    class="header-board"
+    style="top: {{chipTop}}px"
+    hover-class="board-pressed"
+    hover-stay-time="150"
+    bindtap="goOverview"
+  >
     <image class="board-bg" src="/assets/board.png" mode="widthFix" />
     <view class="board-content">
       <image class="title-img" src="/assets/title.png" mode="widthFix" />
@@ -62,6 +69,7 @@
         <image class="heart-icon" src="/assets/heart.png" mode="widthFix" />
       </view>
     </view>
+    <view class="board-dot" wx:if="{{pendingForMe > 0}}">{{pendingForMe}}</view>
   </view>
 </view>
 

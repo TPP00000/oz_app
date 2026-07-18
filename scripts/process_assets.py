@@ -19,7 +19,7 @@ ASSETS = Path(__file__).resolve().parent.parent / "miniprogram" / "assets"
 WHITE_THRESHOLD = 235
 TARGETS = {
     "tree-day.png": {"width": 768},
-    "tree-bare-day.png": {"width": 768},
+    "tree-bare-day.png": {"width": 768, "big_white": True, "big_white_min_area": 120},
     "fruit-eggplant.png": {"width": 240},
     "fruit-apple.png": {"width": 240},
     "heart.png": {"width": 160},
@@ -30,7 +30,10 @@ TARGETS = {
 
 
 def remove_white_bg(
-    img: Image.Image, all_white: bool = False, big_white: bool = False
+    img: Image.Image,
+    all_white: bool = False,
+    big_white: bool = False,
+    big_white_min_area: int = 800,
 ) -> Image.Image:
     rgba = np.array(img.convert("RGBA"), dtype=np.uint8)
     h, w = rgba.shape[:2]
@@ -43,8 +46,8 @@ def remove_white_bg(
 
     if big_white:
         # 大块白模式：按连通块判断——触边或面积大的白色区域删除（如绳圈内的留白），
-        # 小块白色（花瓣、高光）保留
-        rgba[_find_big_white(near_white), 3] = 0
+        # 小块白色（花瓣、高光）保留；min_area 可按素材调整
+        rgba[_find_big_white(near_white, min_area=big_white_min_area), 3] = 0
         return _feather_edges(rgba)
 
     # BFS：只移除与边缘连通的白色区域（保留主体内部的白色高光）
@@ -155,6 +158,7 @@ def main() -> None:
             img,
             all_white=conf.get("all_white", False),
             big_white=conf.get("big_white", False),
+            big_white_min_area=conf.get("big_white_min_area", 800),
         )
         img = crop_and_resize(img, conf["width"])
         img = compress_png(img)
