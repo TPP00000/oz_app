@@ -1,58 +1,73 @@
 <!--pages/tree/tree.wxml - 茄茄愿望树页-->
 <view class="page-loading" wx:if="{{loading}}">愿望树生长中…</view>
 
-<view class="tree-page" wx:else style="padding-top: {{safeTop + 60}}px">
+<view class="tree-page" wx:else style="padding-top: {{safeTop + 4}}px">
   <nav-back />
   <view class="refresh-tip" wx:if="{{refreshing}}">
     <view class="spinner"></view>
   </view>
   <image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
 
-  <!-- 成长树 -->
-  <view class="scene">
+  <!-- 成长树（唯一会被滚出屏幕的部分；负边距让档位牌紧贴树底） -->
+  <view class="scene" style="margin-bottom: -{{chipRowTop > 14 ? chipRowTop - 14 : 0}}px">
     <image class="tree" src="{{treeSrc}}" mode="widthFix" />
-    <view class="stage-chip">Lv.{{stage}} {{stageName}}</view>
+  </view>
+
+  <!-- 吸顶哨兵：它滚出屏顶的瞬间 = 头部锁定，用来切换头部底色 -->
+  <view class="sticky-sentinel"></view>
+
+  <!-- 吸顶头部：碰到屏顶即锁住，布局始终不变 -->
+  <view class="sticky-header">
+    <!-- 遮挡帷幕：与全屏背景逐像素对齐的背景图拷贝，锁定时淡入 -->
+    <image
+      class="header-veil {{stuckBg ? 'veil-on' : ''}}"
+      src="/assets/tree-bg-day.jpg"
+      mode="aspectFill"
+    />
+    <view class="header-inner">
+    <view class="chip-row" style="margin-top: {{chipRowTop}}px; height: {{chipRowH}}px;">
+      <view class="stage-chip">Lv.{{stage}} {{stageName}}</view>
+    </view>
     <text class="grow-text">{{growText}}</text>
+
+    <view class="stats card">
+      <view class="stat-cell">
+        <text class="stat-num">{{stats.askedByMe}}</text>
+        <text class="stat-label">我提问</text>
+      </view>
+      <view class="stat-cell">
+        <text class="stat-num">{{stats.answeredByMe}}</text>
+        <text class="stat-label">我回答</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-cell">
+        <text class="stat-num">{{stats.askedByTa}}</text>
+        <text class="stat-label">TA 提问</text>
+      </view>
+      <view class="stat-cell">
+        <text class="stat-num">{{stats.answeredByTa}}</text>
+        <text class="stat-label">TA 回答</text>
+      </view>
+    </view>
+
+    <view class="action-row">
+      <view
+        class="tab {{activeTab === 'forMe' ? 'tab-active' : ''}}"
+        data-tab="forMe"
+        bindtap="onSwitchTab"
+      >TA 问我的 ({{listForMe.length}})</view>
+      <view
+        class="tab {{activeTab === 'byMe' ? 'tab-active' : ''}}"
+        data-tab="byMe"
+        bindtap="onSwitchTab"
+      >我问 TA 的 ({{listByMe.length}})</view>
+      <view class="btn-primary plant-mini" hover-class="btn-pressed" bindtap="onPlant">🌱 提问</view>
+    </view>
+    </view>
   </view>
 
-  <!-- 双方数据统计 -->
-  <view class="stats card">
-    <view class="stat-cell">
-      <text class="stat-num">{{stats.askedByMe}}</text>
-      <text class="stat-label">我提问</text>
-    </view>
-    <view class="stat-cell">
-      <text class="stat-num">{{stats.answeredByMe}}</text>
-      <text class="stat-label">我回答</text>
-    </view>
-    <view class="stat-divider"></view>
-    <view class="stat-cell">
-      <text class="stat-num">{{stats.askedByTa}}</text>
-      <text class="stat-label">TA 提问</text>
-    </view>
-    <view class="stat-cell">
-      <text class="stat-num">{{stats.answeredByTa}}</text>
-      <text class="stat-label">TA 回答</text>
-    </view>
-  </view>
-
-  <view class="btn-primary plant-btn" hover-class="btn-pressed" bindtap="onPlant">🌱 种一个问题</view>
-
-  <!-- 问答分类 -->
-  <view class="tabs">
-    <view
-      class="tab {{activeTab === 'forMe' ? 'tab-active' : ''}}"
-      data-tab="forMe"
-      bindtap="onSwitchTab"
-    >TA 问我的 ({{listForMe.length}})</view>
-    <view
-      class="tab {{activeTab === 'byMe' ? 'tab-active' : ''}}"
-      data-tab="byMe"
-      bindtap="onSwitchTab"
-    >我问 TA 的 ({{listByMe.length}})</view>
-  </view>
-
-  <view class="list">
+  <!-- 问答列表 -->
+  <view class="list" style="min-height: {{listMinH}}px">
     <view
       wx:for="{{activeTab === 'forMe' ? listForMe : listByMe}}"
       wx:key="id"
@@ -66,7 +81,7 @@
       <text class="list-tag tag-{{item.status}}">{{item.statusText}}</text>
     </view>
 
-    <view class="empty" wx:if="{{(activeTab === 'forMe' ? listForMe : listByMe).length === 0}}">
+    <view class="empty" wx:if="{{activeTab === 'forMe' ? listForMe.length === 0 : listByMe.length === 0}}">
       <text wx:if="{{activeTab === 'forMe'}}">TA 还没有问过你问题～</text>
       <text wx:else>你还没有问过 TA 问题，去种一个吧 🌱</text>
     </view>

@@ -4,7 +4,8 @@
     "pages/bind/bind",
     "pages/tree/tree",
     "pages/card/card",
-    "pages/overview/overview"
+    "pages/overview/overview",
+    "pages/photos/photos"
   ],
   "window": {
     "navigationStyle": "custom",

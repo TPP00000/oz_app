@@ -1,4 +1,4 @@
-<!--pages/overview/overview.wxml - 小屋手账-->
+<!--pages/overview/overview.wxml - 小屋手账（功能中枢）-->
 <nav-back />
 
 <view class="page-loading" wx:if="{{loading}}">手账翻开中…</view>
@@ -15,49 +15,22 @@
     </view>
   </view>
 
-  <!-- 果子统计 -->
-  <view class="stats">
-    <view class="stat card" hover-class="btn-pressed" bindtap="goTree">
-      <text class="stat-num num-waiting">{{stats.waiting}}</text>
-      <text class="stat-label">等你回答</text>
-    </view>
-    <view class="stat card" hover-class="btn-pressed" bindtap="goTree">
-      <text class="stat-num num-mine">{{stats.mine}}</text>
-      <text class="stat-label">等 TA 回答</text>
-    </view>
-    <view class="stat card" hover-class="btn-pressed" bindtap="goTree">
-      <text class="stat-num num-done">{{stats.done}}</text>
-      <text class="stat-label">已成熟</text>
-    </view>
-    <view class="stat card" hover-class="btn-pressed" bindtap="goTree">
-      <text class="stat-num">{{stats.total}}</text>
-      <text class="stat-label">全部果子</text>
-    </view>
-  </view>
-
-  <!-- 最近动态 -->
-  <view class="recent" wx:if="{{recent.length > 0}}">
-    <text class="recent-title">最近的果子</text>
+  <!-- 功能模块 -->
+  <view class="modules">
     <view
-      wx:for="{{recent}}"
-      wx:key="id"
-      class="recent-item card"
+      wx:for="{{modules}}"
+      wx:key="key"
+      class="module card"
       hover-class="btn-pressed"
-      data-id="{{item.id}}"
-      bindtap="goCard"
+      data-url="{{item.url}}"
+      data-title="{{item.title}}"
+      bindtap="onTapModule"
     >
-      <image class="recent-icon" src="/assets/fruit-{{item.species}}.png" mode="widthFix" />
-      <view class="recent-mid">
-        <text class="recent-q">{{item.question}}</text>
-        <text class="recent-date">{{item.date}}</text>
-      </view>
-      <text class="recent-tag tag-{{item.status}}">{{item.statusText}}</text>
+      <view class="module-badge" wx:if="{{item.badge > 0}}">{{item.badge}}</view>
+      <image class="module-icon" src="{{item.icon}}" mode="aspectFit" />
+      <text class="module-title">{{item.title}}</text>
+      <text class="module-desc">{{item.desc}}</text>
     </view>
-  </view>
-
-  <view class="empty" wx:if="{{recent.length === 0}}">
-    <text>手账还是空白的～</text>
-    <text>去愿望树上种下第一个问题吧</text>
   </view>
 </view>
 

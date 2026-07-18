@@ -5,7 +5,7 @@ const shared = require('./shared')
 
 const db = cloud.database()
 
-const COLLECTIONS = ['users', 'couples', 'cards']
+const COLLECTIONS = ['users', 'couples', 'cards', 'photos']
 
 // 同一云函数实例只需建一次表（冷启动后首次调用执行）
 let collectionsReady = false

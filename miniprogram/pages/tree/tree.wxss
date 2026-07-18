@@ -14,7 +14,7 @@
   z-index: -1;
 }
 
-/* 成长树 */
+/* 成长树（唯一被滚出屏幕的内容） */
 .scene {
   display: flex;
   flex-direction: column;
@@ -23,16 +23,58 @@
 }
 
 .tree {
-  width: 340rpx;
+  width: 300rpx;
   filter: drop-shadow(0 10rpx 22rpx rgba(120, 90, 60, 0.22));
 }
 
+.sticky-sentinel {
+  height: 2rpx;
+}
+
+/* 吸顶头部：纯 CSS sticky，碰顶即锁，布局零变化 */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  margin: 0 -40rpx;
+  overflow: hidden;
+}
+
+/* 遮挡帷幕：与页面固定背景同图同裁切，锁定时与底层背景逐像素重合 */
+.header-veil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.header-veil.veil-on {
+  opacity: 1;
+}
+
+.header-inner {
+  position: relative;
+  padding: 0 40rpx 18rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 档位牌行：与微信胶囊同高对齐（间距由内联样式给出） */
+.chip-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .stage-chip {
-  margin-top: 12rpx;
   background: var(--color-paper);
   border: 3rpx solid var(--color-line);
   border-radius: 999rpx;
-  padding: 8rpx 30rpx;
+  padding: 6rpx 30rpx;
   font-size: 25rpx;
   color: var(--color-ink);
   box-shadow: 0 5rpx 0 rgba(170, 130, 90, 0.22),
@@ -40,14 +82,16 @@
 }
 
 .grow-text {
-  margin-top: 12rpx;
+  margin-top: 10rpx;
   font-size: 23rpx;
   color: var(--color-ink-soft);
 }
 
 /* 统计 */
 .stats {
-  margin-top: 26rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 18rpx;
   display: flex;
   align-items: center;
   padding: 26rpx 12rpx;
@@ -77,27 +121,33 @@
   background: var(--color-line);
 }
 
-.plant-btn {
-  margin: 28rpx auto 0;
-  width: 420rpx;
-}
-
-/* 分类页签 */
-.tabs {
+/* 页签 + 提问按钮一行 */
+.action-row {
+  width: 100%;
   display: flex;
-  gap: 16rpx;
-  margin: 34rpx 0 20rpx;
+  gap: 14rpx;
+  margin-top: 18rpx;
+  align-items: stretch;
 }
 
 .tab {
   flex: 1;
   text-align: center;
   padding: 16rpx 0;
-  font-size: 26rpx;
+  font-size: 25rpx;
   color: var(--color-ink-soft);
-  background: rgba(255, 251, 240, 0.6);
+  background: var(--color-paper);
   border: 3rpx solid var(--color-line);
   border-radius: 999rpx;
+  box-shadow: 0 5rpx 0 rgba(170, 130, 90, 0.22),
+    inset 0 3rpx 0 rgba(255, 255, 255, 0.7);
+}
+
+.plant-mini {
+  flex-shrink: 0;
+  width: 170rpx;
+  padding: 16rpx 0;
+  font-size: 25rpx;
 }
 
 .tab-active {
@@ -109,8 +159,9 @@
     inset 0 4rpx 0 rgba(255, 255, 255, 0.4);
 }
 
-/* 列表 */
+/* 列表：最小高度由 JS 精确计算（屏高-头部高），切页签滚动不动、短内容不过滚 */
 .list {
+  margin-top: 20rpx;
   display: flex;
   flex-direction: column;
   gap: 18rpx;

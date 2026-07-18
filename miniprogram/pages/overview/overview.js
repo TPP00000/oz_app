@@ -1,18 +1,16 @@
-// pages/overview/overview.js - 小屋手账（互动数据总览，木牌进入的辅助页面）
+// pages/overview/overview.js - 小屋手账（功能中枢：各模块的集中入口）
 const api = require('../../utils/api')
 const ui = require('../../utils/ui')
 
 const app = getApp()
-
-const RECENT_LIMIT = 6
 
 Page({
   data: {
     loading: true,
     safeTop: 20,
     days: 0,
-    stats: { waiting: 0, mine: 0, done: 0, total: 0 },
-    recent: []
+    treeDesc: '',
+    modules: []
   },
 
   onLoad() {
@@ -41,26 +39,15 @@ Page({
       app.globalData.couple = result.couple
 
       const cards = await api.call('card.list')
-      const stats = {
-        waiting: cards.filter((c) => c.status === 'pending' && !c.askedByMe).length,
-        mine: cards.filter((c) => c.status === 'pending' && c.askedByMe).length,
-        done: cards.filter((c) => c.status === 'answered').length,
-        total: cards.length
-      }
-      const recent = cards.slice(0, RECENT_LIMIT).map((card) => ({
-        id: card.id,
-        question: card.question,
-        species: card.species || 'apple',
-        statusText: this.statusText(card),
-        status: this.fruitStatus(card),
-        date: this.fmtDate(card.createdAt)
-      }))
+      const waiting = cards.filter((c) => c.status === 'pending' && !c.askedByMe).length
+      const treeDesc = waiting > 0
+        ? `${cards.length} 颗果子 · ${waiting} 颗等你回答`
+        : `${cards.length} 颗果子`
 
       this.setData({
         loading: false,
         days: this.calcDays(result.couple.boundAt),
-        stats,
-        recent
+        modules: this.buildModules(treeDesc, waiting)
       })
     } catch (err) {
       this.setData({ loading: false })
@@ -68,26 +55,41 @@ Page({
     }
   },
 
-  fruitStatus(card) {
-    if (card.status === 'answered') {
-      return 'done'
-    }
-    return card.askedByMe ? 'mine' : 'waiting'
-  },
-
-  statusText(card) {
-    if (card.status === 'answered') {
-      return '已成熟'
-    }
-    return card.askedByMe ? '等 TA 回答' : '等你回答'
-  },
-
-  fmtDate(iso) {
-    if (!iso) {
-      return ''
-    }
-    const d = new Date(iso)
-    return `${d.getMonth() + 1}月${d.getDate()}日`
+  buildModules(treeDesc, waiting) {
+    return [
+      {
+        key: 'tree',
+        icon: '/assets/fruit-eggplant.png',
+        title: '愿望树',
+        desc: treeDesc,
+        badge: waiting > 0 ? waiting : 0,
+        url: '/pages/tree/tree'
+      },
+      {
+        key: 'photos',
+        icon: '/assets/sp-painting.png',
+        title: '照片墙',
+        desc: '记录我们的日常',
+        badge: 0,
+        url: '/pages/photos/photos'
+      },
+      {
+        key: 'notes',
+        icon: '/assets/sp-notebook.png',
+        title: '留言板',
+        desc: '手写的小纸条',
+        badge: 0,
+        url: ''
+      },
+      {
+        key: 'more',
+        icon: '/assets/house-eggplant.png',
+        title: '更多角落',
+        desc: '小屋还在装修',
+        badge: 0,
+        url: ''
+      }
+    ]
   },
 
   calcDays(boundAt) {
@@ -98,12 +100,12 @@ Page({
     return Math.max(1, Math.floor(ms / (24 * 60 * 60 * 1000)) + 1)
   },
 
-  goTree() {
-    wx.navigateTo({ url: '/pages/tree/tree' })
-  },
-
-  goCard(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/card/card?id=${id}` })
+  onTapModule(e) {
+    const { url, title } = e.currentTarget.dataset
+    if (url) {
+      wx.navigateTo({ url })
+    } else {
+      ui.toast(this, `${title}还在装修中，敬请期待 ✨`)
+    }
   }
 })

@@ -34,4 +34,28 @@ function validateAnswer(input) {
   return validateText(input, ANSWER_MAX, '回答')
 }
 
-module.exports = { QUESTION_MAX, ANSWER_MAX, validateQuestion, validateAnswer }
+const CAPTION_MAX = 60
+
+/** 校验照片说明（可为空） */
+function validateCaption(input) {
+  if (input === undefined || input === null || input === '') {
+    return { valid: true, value: '', error: null }
+  }
+  if (typeof input !== 'string') {
+    return { valid: false, value: '', error: '说明格式不正确' }
+  }
+  const value = input.trim()
+  if (value.length > CAPTION_MAX) {
+    return { valid: false, value: '', error: `说明最多 ${CAPTION_MAX} 字` }
+  }
+  return { valid: true, value, error: null }
+}
+
+module.exports = {
+  QUESTION_MAX,
+  ANSWER_MAX,
+  CAPTION_MAX,
+  validateQuestion,
+  validateAnswer,
+  validateCaption
+}

@@ -19,11 +19,69 @@ Page({
     stats: { askedByMe: 0, askedByTa: 0, answeredByMe: 0, answeredByTa: 0, total: 0 },
     activeTab: 'forMe',
     listForMe: [],
-    listByMe: []
+    listByMe: [],
+    chipRowTop: 24,
+    chipRowH: 34,
+    stuckBg: false,
+    listMinH: 400
+  },
+
+  // 哨兵滚出屏顶的瞬间给头部升起帷幕（页面渲染出来后才能绑定）
+  setupObserver() {
+    if (this.observer) {
+      return
+    }
+    this.observer = wx.createIntersectionObserver(this)
+    this.observer.relativeToViewport({ top: 0 }).observe('.sticky-sentinel', (res) => {
+      const stuckBg = res.intersectionRatio <= 0 && res.boundingClientRect.top < 0
+      if (stuckBg !== this.data.stuckBg) {
+        this.setData({ stuckBg })
+      }
+    })
+  },
+
+  onUnload() {
+    if (this.observer) {
+      this.observer.disconnect()
+    }
+  },
+
+  // 列表最小高度 = 屏高 - 头部高 - 列表上边距 - 页面底部内边距：
+  // 内容不满时恰好滚到头部锁定即到底，一寸不多滚
+  measureListMinH() {
+    this.setupObserver()
+    wx.createSelectorQuery()
+      .in(this)
+      .select('.sticky-header')
+      .boundingClientRect((rect) => {
+        if (!rect) {
+          return
+        }
+        const win = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+        const rpx = win.windowWidth / 750
+        const bottomPad = 80 * rpx
+        const listGap = 20 * rpx
+        this.setData({
+          listMinH: Math.max(200, win.windowHeight - rect.height - listGap - bottomPad)
+        })
+      })
+      .exec()
   },
 
   onLoad() {
-    this.setData({ safeTop: ui.safeTop() })
+    // 档位牌所在行与微信胶囊按钮同高对齐（吸顶锁定后正好落在返回钮与胶囊之间）
+    let chipRowTop = ui.safeTop() + 6
+    let chipRowH = 34
+    try {
+      const mb = wx.getMenuButtonBoundingClientRect()
+      if (mb && mb.height) {
+        chipRowTop = mb.top
+        chipRowH = mb.height
+      }
+    } catch (err) {
+      // 个别环境取不到胶囊位置时用兜底值
+    }
+    this.setData({ safeTop: ui.safeTop(), chipRowTop, chipRowH })
   },
 
   onShareAppMessage() {
@@ -48,11 +106,14 @@ Page({
     try {
       const cards = await api.call('card.list')
       this.hasLoaded = true
-      this.setData({
-        loading: false,
-        refreshing: false,
-        ...this.buildView(cards)
-      })
+      this.setData(
+        {
+          loading: false,
+          refreshing: false,
+          ...this.buildView(cards)
+        },
+        () => this.measureListMinH()
+      )
     } catch (err) {
       this.setData({ loading: false, refreshing: false })
       ui.showError(this, err)

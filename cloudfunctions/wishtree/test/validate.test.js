@@ -4,8 +4,10 @@ const assert = require('node:assert/strict')
 const {
   QUESTION_MAX,
   ANSWER_MAX,
+  CAPTION_MAX,
   validateQuestion,
-  validateAnswer
+  validateAnswer,
+  validateCaption
 } = require('../lib/validate')
 
 test('validateQuestion 接受正常问题并去除首尾空格', () => {
@@ -35,6 +37,15 @@ test('validateQuestion 边界长度：刚好上限通过，超一字拒绝', () 
 test('validateAnswer 边界长度：刚好上限通过，超一字拒绝', () => {
   assert.equal(validateAnswer('答'.repeat(ANSWER_MAX)).valid, true)
   assert.equal(validateAnswer('答'.repeat(ANSWER_MAX + 1)).valid, false)
+})
+
+test('validateCaption 允许为空、去空格、限制长度', () => {
+  assert.deepEqual(validateCaption(''), { valid: true, value: '', error: null })
+  assert.deepEqual(validateCaption(undefined), { valid: true, value: '', error: null })
+  assert.equal(validateCaption('  今天的晚饭  ').value, '今天的晚饭')
+  assert.equal(validateCaption('说'.repeat(CAPTION_MAX)).valid, true)
+  assert.equal(validateCaption('说'.repeat(CAPTION_MAX + 1)).valid, false)
+  assert.equal(validateCaption(123).valid, false)
 })
 
 test('校验失败时 error 是用户可读文案', () => {

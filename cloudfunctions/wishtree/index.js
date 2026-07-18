@@ -6,6 +6,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const userHandlers = require('./handlers/user')
 const coupleHandlers = require('./handlers/couple')
 const cardHandlers = require('./handlers/card')
+const photoHandlers = require('./handlers/photo')
 const { fail } = require('./lib/response')
 
 const ROUTES = {
@@ -16,7 +17,10 @@ const ROUTES = {
   'card.list': cardHandlers.list,
   'card.create': cardHandlers.create,
   'card.get': cardHandlers.get,
-  'card.answer': cardHandlers.answer
+  'card.answer': cardHandlers.answer,
+  'photo.list': photoHandlers.list,
+  'photo.create': photoHandlers.create,
+  'photo.remove': photoHandlers.remove
 }
 
 exports.main = async (event) => {
