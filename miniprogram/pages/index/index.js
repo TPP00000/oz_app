@@ -1,18 +1,59 @@
-// pages/index/index.js - 小屋主页
+// pages/index/index.js - 茄茄小屋主页（横向全景房间）
 const api = require('../../utils/api')
+const ui = require('../../utils/ui')
 
 const app = getApp()
+
+// 全景图原始比例（1536x1024）
+const PANO_RATIO = 1536 / 1024
+
+// 树在全景图中的区域（百分比，按当前 room-pano-day.jpg 人工标定）
+const TREE_RECT = { left: 38, top: 36, width: 21, height: 41 }
+
+// 未来可交互物件的占位热区（百分比人工标定，点击提示"装修中"）
+const PLACEHOLDERS = [
+  { key: 'window', name: '窗户', left: 0.5, top: 2, width: 21, height: 58 },
+  { key: 'plant', name: '绿植', left: 0, top: 60, width: 9.5, height: 29 },
+  { key: 'bookshelf', name: '书柜', left: 25.7, top: 14, width: 21, height: 63 },
+  { key: 'sofa', name: '沙发', left: 55.5, top: 47, width: 32, height: 40 },
+  { key: 'painting', name: '挂画', left: 66.5, top: 16.5, width: 15.5, height: 23 },
+  { key: 'shelf', name: '置物架', left: 84.5, top: 10, width: 15.5, height: 75 }
+]
 
 Page({
   data: {
     loading: true,
     loadFailed: false,
     daysTogether: 0,
-    pendingForMe: 0
+    pendingForMe: 0,
+    panoWidth: 0,
+    panoHeight: 0,
+    scrollLeft: 0,
+    chipTop: 40,
+    treeRect: TREE_RECT,
+    placeholders: PLACEHOLDERS
+  },
+
+  onLoad() {
+    this.layoutPano()
   },
 
   onShow() {
     this.loadHome()
+  },
+
+  // 全景图高度撑满屏幕，宽度按比例展开；初始视野对准桌上的树
+  layoutPano() {
+    const win = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+    const panoHeight = win.windowHeight
+    const panoWidth = Math.round(panoHeight * PANO_RATIO)
+    const treeCenterX = ((TREE_RECT.left + TREE_RECT.width / 2) / 100) * panoWidth
+    this.setData({
+      panoWidth,
+      panoHeight,
+      scrollLeft: Math.max(0, Math.round(treeCenterX - win.windowWidth / 2)),
+      chipTop: ui.safeTop() + 10
+    })
   },
 
   async loadHome() {
@@ -39,7 +80,7 @@ Page({
       })
     } catch (err) {
       this.setData({ loading: false, loadFailed: true })
-      api.showError(err)
+      ui.showError(this, err)
     }
   },
 
@@ -53,6 +94,11 @@ Page({
 
   goTree() {
     wx.navigateTo({ url: '/pages/tree/tree' })
+  },
+
+  onTapPlaceholder(e) {
+    const name = e.currentTarget.dataset.name
+    ui.toast(this, `${name}还在装修中，敬请期待 ✨`)
   },
 
   onRetry() {

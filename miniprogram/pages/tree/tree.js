@@ -1,5 +1,6 @@
 // pages/tree/tree.js - 茄茄愿望树页
 const api = require('../../utils/api')
+const ui = require('../../utils/ui')
 
 // 树冠区域内最多挂 8 颗果子的固定位置（相对树容器的百分比）
 const FRUIT_SLOTS = [
@@ -19,7 +20,12 @@ Page({
   data: {
     loading: true,
     fruits: [],
-    allCards: []
+    allCards: [],
+    safeTop: 20
+  },
+
+  onLoad() {
+    this.setData({ safeTop: ui.safeTop() })
   },
 
   onShow() {
@@ -33,7 +39,8 @@ Page({
       const allCards = cards.map((card) => ({
         id: card.id,
         question: card.question,
-        species: card.species,
+        // 旧数据没有品种字段时按苹果显示（与云函数兜底一致）
+        species: card.species || 'apple',
         status: this.fruitStatus(card),
         statusText: this.statusText(card)
       }))
@@ -47,7 +54,7 @@ Page({
       this.setData({ loading: false, fruits, allCards })
     } catch (err) {
       this.setData({ loading: false })
-      api.showError(err)
+      ui.showError(this, err)
     }
   },
 

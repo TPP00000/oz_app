@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "paper-toast": "/components/paper-toast/paper-toast"
+  },
   "navigationBarTitleText": "茄茄小屋"
 }

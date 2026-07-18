@@ -13,20 +13,29 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 ASSETS = Path(__file__).resolve().parent.parent / "miniprogram" / "assets"
 
-# 白底判定阈值与目标尺寸（宽 px）
+# 白底判定阈值与目标配置
+# all_white=True 时删除所有近白像素（适合文字：字腔内的封闭白色也要透明）
+# 默认只删与边缘连通的白色（保护主体内部的白色高光）
 WHITE_THRESHOLD = 235
 TARGETS = {
-    "tree-day.png": 768,
-    "tree-bare-day.png": 768,
-    "fruit-eggplant.png": 240,
-    "fruit-apple.png": 240,
+    "tree-day.png": {"width": 768},
+    "tree-bare-day.png": {"width": 768},
+    "fruit-eggplant.png": {"width": 240},
+    "fruit-apple.png": {"width": 240},
+    "heart.png": {"width": 160},
+    "title.png": {"width": 640, "all_white": True},
 }
 
 
-def remove_white_bg(img: Image.Image) -> Image.Image:
+def remove_white_bg(img: Image.Image, all_white: bool = False) -> Image.Image:
     rgba = np.array(img.convert("RGBA"), dtype=np.uint8)
     h, w = rgba.shape[:2]
     near_white = np.all(rgba[:, :, :3] >= WHITE_THRESHOLD, axis=2)
+
+    if all_white:
+        # 文字模式：所有近白像素一律透明（包括笔画包住的字腔）
+        rgba[near_white, 3] = 0
+        return _feather_edges(rgba)
 
     # BFS：只移除与边缘连通的白色区域（保留主体内部的白色高光）
     visited = np.zeros((h, w), dtype=bool)
@@ -49,7 +58,10 @@ def remove_white_bg(img: Image.Image) -> Image.Image:
                 queue.append((ny, nx))
 
     rgba[visited, 3] = 0
+    return _feather_edges(rgba)
 
+
+def _feather_edges(rgba: np.ndarray) -> Image.Image:
     # 边缘羽化：紧邻透明区的不透明像素按亮度衰减 alpha，减轻白边
     alpha = rgba[:, :, 3]
     transparent = alpha == 0
@@ -94,15 +106,15 @@ def compress_png(img: Image.Image) -> Image.Image:
 def main() -> None:
     wanted = sys.argv[1:]
     targets = {
-        name: width
-        for name, width in TARGETS.items()
+        name: conf
+        for name, conf in TARGETS.items()
         if not wanted or any(w in name for w in wanted)
     }
-    for name, width in targets.items():
+    for name, conf in targets.items():
         path = ASSETS / name
         img = Image.open(path)
-        img = remove_white_bg(img)
-        img = crop_and_resize(img, width)
+        img = remove_white_bg(img, all_white=conf.get("all_white", False))
+        img = crop_and_resize(img, conf["width"])
         img = compress_png(img)
         img.save(path, optimize=True)
         kb = path.stat().st_size // 1024

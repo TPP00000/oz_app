@@ -1,0 +1,3 @@
+<view class="paper-toast {{visible ? 'paper-toast-show' : ''}}">
+  <text>{{message}}</text>
+</view>

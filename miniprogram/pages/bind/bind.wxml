@@ -1,5 +1,5 @@
 <!--pages/bind/bind.wxml - 情侣绑定页-->
-<view class="bind-page">
+<view class="bind-page" style="padding-top: {{safeTop + 40}}px">
   <view class="hero">
     <image class="hero-tree" src="/assets/tree-day.png" mode="widthFix" />
     <text class="hero-title">邀请 TA 住进茄茄小屋</text>
@@ -14,11 +14,11 @@
         <text class="code">{{inviteCode}}</text>
         <text class="code-hint">点击复制，发给 TA</text>
       </view>
-      <view class="btn-ghost" bindtap="onCheckBound">
+      <view class="btn-ghost" hover-class="btn-pressed" bindtap="onCheckBound">
         {{checking ? '查询中…' : 'TA 输入好了？点我刷新'}}
       </view>
     </block>
-    <view wx:else class="btn-primary {{creating ? 'disabled' : ''}}" bindtap="onCreateInvite">
+    <view wx:else class="btn-primary {{creating ? 'disabled' : ''}}" hover-class="btn-pressed" bindtap="onCreateInvite">
       {{creating ? '生成中…' : '生成我的邀请码'}}
     </view>
   </view>
@@ -35,8 +35,10 @@
       value="{{inputCode}}"
       bindinput="onInputCode"
     />
-    <view class="btn-primary {{binding ? 'disabled' : ''}}" bindtap="onBind">
+    <view class="btn-primary {{binding ? 'disabled' : ''}}" hover-class="btn-pressed" bindtap="onBind">
       {{binding ? '绑定中…' : '绑定'}}
     </view>
   </view>
 </view>
+
+<paper-toast id="toast" />

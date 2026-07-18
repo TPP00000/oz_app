@@ -1,7 +1,8 @@
 <!--pages/tree/tree.wxml - 茄茄愿望树页-->
 <view class="page-loading" wx:if="{{loading}}">愿望树生长中…</view>
 
-<view class="tree-page" wx:else>
+<view class="tree-page" wx:else style="padding-top: {{safeTop + 60}}px">
+  <nav-back />
   <image class="page-bg" src="/assets/tree-bg-day.jpg" mode="aspectFill" />
 
   <!-- 树的场景 -->
@@ -19,7 +20,7 @@
         bindtap="onTapFruit"
       />
     </view>
-    <view class="btn-primary plant-btn" bindtap="onPlant">🌱 种一个问题</view>
+    <view class="btn-primary plant-btn" hover-class="btn-pressed" bindtap="onPlant">🌱 种一个问题</view>
   </view>
 
   <!-- 图例 -->
@@ -50,3 +51,5 @@
     <text>种下第一个问题，等 TA 来回答吧</text>
   </view>
 </view>
+
+<paper-toast id="toast" />

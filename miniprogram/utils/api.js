@@ -33,13 +33,4 @@ function call(action, data) {
     })
 }
 
-/** 显示错误弹窗 */
-function showError(err) {
-  wx.showToast({
-    title: (err && err.message) || '出错了，请稍后再试',
-    icon: 'none',
-    duration: 2500
-  })
-}
-
-module.exports = { call, showError }
+module.exports = { call }

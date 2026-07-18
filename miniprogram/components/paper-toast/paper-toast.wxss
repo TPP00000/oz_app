@@ -1,0 +1,28 @@
+/* components/paper-toast/paper-toast.wxss */
+.paper-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%) translateY(24rpx);
+  max-width: 78vw;
+  background: rgba(255, 251, 240, 0.96);
+  border: 3rpx solid rgba(150, 110, 70, 0.4);
+  border-radius: 999rpx;
+  padding: 20rpx 44rpx;
+  color: #6b4a32;
+  font-size: 27rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  text-align: center;
+  box-shadow: 0 10rpx 28rpx rgba(120, 85, 50, 0.22),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 999;
+}
+
+.paper-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

@@ -1,57 +1,84 @@
-/**app.wxss - 全局样式**/
+/**app.wxss - 全局样式（治愈系游戏 UI 规范）
+ * 配色取自房间插画：奶油底、暖棕文字、蜜桃色主按钮、低饱和点缀色
+ */
 page {
-  --color-bg: #FFF6EF;
-  --color-card: #FFFFFF;
-  --color-primary: #F27E9D;
-  --color-primary-deep: #E45A82;
-  --color-green: #7BC47F;
-  --color-green-deep: #5AA75F;
-  --color-gold: #F5B94E;
-  --color-text: #4A3B36;
-  --color-text-sub: #9B8A83;
+  --color-bg: #FBF3E4;
+  --color-paper: rgba(255, 251, 240, 0.94);
+  --color-ink: #6B4A32;
+  --color-ink-soft: #A08468;
+  --color-line: rgba(150, 110, 70, 0.35);
+  --color-primary: #F09372;
+  --color-primary-deep: #D97757;
+  --color-rose: #EE93A8;
+  --color-green: #9BBF72;
+  --color-gold: #E8B04B;
+  --color-purple: #8B6BB8;
 
   background: var(--color-bg);
-  color: var(--color-text);
-  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  color: var(--color-ink);
+  /* 全局像素体（子集含常用汉字全集）；生僻字按字回退系统字体 */
+  font-family: "FusionPixel", -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
 }
 
+/* ============ 按钮：厚圆角"饼干"造型，描边 + 按压下沉 ============ */
 .btn-primary {
-  background: linear-gradient(135deg, #F98BA8, #E45A82);
+  position: relative;
+  background: linear-gradient(180deg, #FBC29B, #F09372);
+  border: 3rpx solid rgba(150, 90, 55, 0.55);
+  border-radius: 999rpx;
   color: #fff;
-  border-radius: 48rpx;
+  text-shadow: 0 2rpx 0 rgba(140, 80, 50, 0.35);
   font-size: 30rpx;
-  font-weight: 600;
-  padding: 20rpx 0;
+  font-weight: 800;
+  letter-spacing: 3rpx;
+  padding: 22rpx 0;
   text-align: center;
-  box-shadow: 0 8rpx 20rpx rgba(228, 90, 130, 0.3);
+  box-shadow: 0 8rpx 0 rgba(170, 110, 70, 0.4),
+    inset 0 6rpx 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .btn-primary.disabled {
-  opacity: 0.5;
-  box-shadow: none;
+  opacity: 0.55;
 }
 
 .btn-ghost {
-  background: transparent;
-  color: var(--color-primary-deep);
-  border: 2rpx solid var(--color-primary);
-  border-radius: 48rpx;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 3rpx solid var(--color-line);
+  border-radius: 999rpx;
   font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
   padding: 18rpx 0;
   text-align: center;
+  box-shadow: 0 6rpx 0 rgba(170, 130, 90, 0.25),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.7);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
+/* 按压态：整颗按钮下沉，底部厚度收起 */
+.btn-pressed {
+  transform: translateY(6rpx);
+  box-shadow: 0 2rpx 0 rgba(170, 110, 70, 0.35),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.4);
+}
+
+/* ============ 面板：奶油纸片 ============ */
 .card {
-  background: var(--color-card);
+  background: var(--color-paper);
+  border: 3rpx solid var(--color-line);
   border-radius: 32rpx;
   padding: 36rpx;
-  box-shadow: 0 8rpx 32rpx rgba(74, 59, 54, 0.06);
+  box-shadow: 0 10rpx 24rpx rgba(140, 100, 60, 0.12),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.8);
 }
 
 .page-loading {
   display: flex;
   justify-content: center;
   padding: 120rpx 0;
-  color: var(--color-text-sub);
+  color: var(--color-ink-soft);
+  letter-spacing: 2rpx;
 }

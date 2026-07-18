@@ -1,4 +1,7 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "paper-toast": "/components/paper-toast/paper-toast",
+    "nav-back": "/components/nav-back/nav-back"
+  },
   "navigationBarTitleText": "茄茄愿望树"
 }

@@ -1,0 +1,30 @@
+/* components/nav-back/nav-back.wxss */
+.nav-back {
+  position: fixed;
+  left: 24rpx;
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  background: rgba(255, 251, 240, 0.88);
+  border: 3rpx solid rgba(150, 110, 70, 0.35);
+  box-shadow: 0 6rpx 0 rgba(170, 130, 90, 0.25),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.nav-back-pressed {
+  transform: translateY(4rpx);
+  box-shadow: 0 2rpx 0 rgba(170, 130, 90, 0.2);
+}
+
+.arrow {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #6b4a32;
+  line-height: 1;
+  margin-top: -6rpx;
+}

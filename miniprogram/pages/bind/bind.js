@@ -1,5 +1,6 @@
 // pages/bind/bind.js - 情侣绑定页
 const api = require('../../utils/api')
+const ui = require('../../utils/ui')
 
 const app = getApp()
 
@@ -9,7 +10,12 @@ Page({
     inputCode: '',
     creating: false,
     binding: false,
-    checking: false
+    checking: false,
+    safeTop: 20
+  },
+
+  onLoad() {
+    this.setData({ safeTop: ui.safeTop() })
   },
 
   async onCreateInvite() {
@@ -21,7 +27,7 @@ Page({
       const result = await api.call('couple.createInvite')
       this.setData({ inviteCode: result.inviteCode })
     } catch (err) {
-      api.showError(err)
+      ui.showError(this, err)
     } finally {
       this.setData({ creating: false })
     }
@@ -31,7 +37,7 @@ Page({
     wx.setClipboardData({
       data: this.data.inviteCode,
       success: () => {
-        wx.showToast({ title: '已复制，发给 TA 吧', icon: 'none' })
+        ui.toast(this, '已复制，发给 TA 吧')
       }
     })
   },
@@ -42,7 +48,7 @@ Page({
 
   handleBindSuccess(couple) {
     app.globalData.couple = couple
-    wx.showToast({ title: '绑定成功 💕', icon: 'none' })
+    ui.toast(this, '绑定成功！两个人的小屋开张啦')
     setTimeout(() => {
       wx.redirectTo({ url: '/pages/index/index' })
     }, 1200)
@@ -51,7 +57,7 @@ Page({
   async onBind() {
     const code = this.data.inputCode.trim().toUpperCase()
     if (!code) {
-      wx.showToast({ title: '请先输入邀请码', icon: 'none' })
+      ui.toast(this, '请先输入邀请码')
       return
     }
     if (this.data.binding) {
@@ -62,7 +68,7 @@ Page({
       const result = await api.call('couple.bindWithCode', { inviteCode: code })
       this.handleBindSuccess(result.couple)
     } catch (err) {
-      api.showError(err)
+      ui.showError(this, err)
     } finally {
       this.setData({ binding: false })
     }
@@ -79,10 +85,10 @@ Page({
       if (result.couple) {
         this.handleBindSuccess(result.couple)
       } else {
-        wx.showToast({ title: 'TA 还没输入邀请码哦', icon: 'none' })
+        ui.toast(this, 'TA 还没输入邀请码哦')
       }
     } catch (err) {
-      api.showError(err)
+      ui.showError(this, err)
     } finally {
       this.setData({ checking: false })
     }

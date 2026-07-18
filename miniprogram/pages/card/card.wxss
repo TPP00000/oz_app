@@ -50,7 +50,7 @@
 
 .head-sub {
   font-size: 26rpx;
-  color: var(--color-text-sub);
+  color: var(--color-ink-soft);
 }
 
 .input-area {
@@ -65,7 +65,7 @@
   display: block;
   text-align: right;
   font-size: 22rpx;
-  color: var(--color-text-sub);
+  color: var(--color-ink-soft);
 }
 
 /* 预设问题 */
@@ -79,42 +79,50 @@
   display: flex;
   justify-content: space-between;
   font-size: 24rpx;
-  color: var(--color-text-sub);
+  color: var(--color-ink-soft);
 }
 
 .refresh {
   color: var(--color-primary-deep);
+  font-weight: 600;
 }
 
 .suggest-chip {
-  background: #FFF0F4;
+  background: var(--color-paper);
+  border: 3rpx solid var(--color-line);
   border-radius: 24rpx;
   padding: 20rpx 28rpx;
   font-size: 26rpx;
-  color: var(--color-primary-deep);
+  color: var(--color-ink);
   line-height: 1.5;
+  box-shadow: 0 6rpx 0 rgba(170, 130, 90, 0.18),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.7);
 }
 
 .suggest-chip:active {
-  opacity: 0.7;
+  transform: translateY(4rpx);
+  box-shadow: 0 2rpx 0 rgba(170, 130, 90, 0.15);
 }
 
-/* 问答气泡 */
+/* 问答气泡：纸片便签 */
 .bubble {
   border-radius: 32rpx;
   padding: 32rpx;
   display: flex;
   flex-direction: column;
   gap: 12rpx;
+  border: 3rpx solid var(--color-line);
+  box-shadow: 0 8rpx 20rpx rgba(140, 100, 60, 0.1),
+    inset 0 4rpx 0 rgba(255, 255, 255, 0.7);
 }
 
 .bubble-q {
-  background: #FFF0F4;
+  background: #FBEDE0;
   border-top-left-radius: 8rpx;
 }
 
 .bubble-a {
-  background: #EDF7EE;
+  background: #EEF2DF;
   border-top-right-radius: 8rpx;
   align-self: flex-end;
   width: 88%;
@@ -123,7 +131,8 @@
 
 .bubble-label {
   font-size: 22rpx;
-  color: var(--color-text-sub);
+  color: var(--color-ink-soft);
+  letter-spacing: 2rpx;
 }
 
 .bubble-text {

@@ -6,97 +6,113 @@
   overflow: hidden;
 }
 
-.room-bg {
+.pano-scroll {
+  width: 100%;
+  height: 100%;
+  /* 兜底：即使出现越界空隙也显示暖色而不是白色 */
+  background: var(--color-bg);
+}
+
+.pano {
+  position: relative;
+}
+
+.pano-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-/* 标题浮层 */
-.header-chip {
+/* 热区：平时完全隐形 */
+.hotspot {
   position: absolute;
-  top: 36rpx;
+}
+
+/* 柔光层：椭圆渐变贴合物件轮廓，按下时缓缓浮现、松手缓缓消退 */
+.glow {
+  position: absolute;
+  inset: -6%;
+  background: radial-gradient(
+    ellipse closest-side,
+    rgba(255, 240, 200, 0.5),
+    rgba(255, 240, 200, 0.22) 60%,
+    rgba(255, 240, 200, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.glow-gold {
+  background: radial-gradient(
+    ellipse closest-side,
+    rgba(255, 219, 140, 0.6),
+    rgba(255, 219, 140, 0.28) 60%,
+    rgba(255, 219, 140, 0) 100%
+  );
+}
+
+.hotspot-hover .glow {
+  opacity: 1;
+}
+
+/* 愿望树热区在其他家具热区之上 */
+.tree-hotspot {
+  z-index: 2;
+}
+
+/* 待回答角标：安静的小圆点，不做动画 */
+.tree-dot {
+  position: absolute;
+  top: -6rpx;
+  right: -6rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+  border-radius: 20rpx;
+  background: var(--color-gold);
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 36rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 10rpx rgba(200, 145, 42, 0.4);
+}
+
+/* 标题浮层 */
+/* 磨砂玻璃质感标题条：半透明、无硬边，融进画面 */
+.header-chip {
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 252, 246, 0.82);
-  border-radius: 32rpx;
-  padding: 20rpx 52rpx;
-  box-shadow: 0 8rpx 28rpx rgba(120, 90, 60, 0.16);
-  backdrop-filter: blur(6rpx);
+  background: rgba(255, 249, 238, 0.5);
+  border-radius: 999rpx;
+  padding: 20rpx 50rpx 16rpx;
+  backdrop-filter: blur(16rpx);
+  box-shadow: 0 6rpx 24rpx rgba(120, 85, 50, 0.1);
 }
 
-.title {
-  font-size: 42rpx;
-  font-weight: 800;
-  letter-spacing: 4rpx;
+.title-img {
+  width: 250rpx;
 }
 
 .subtitle {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  color: var(--color-text-sub);
-}
-
-/* 愿望树热区 */
-.tree-hotspot {
-  position: absolute;
-  left: 50%;
-  bottom: 13%;
-  transform: translateX(-50%);
-  width: 320rpx;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 10rpx;
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #7d6650;
+  letter-spacing: 2rpx;
 }
 
-.tree-img {
-  width: 100%;
-  transform-origin: 50% 100%;
-  animation: breathe 3.6s ease-in-out infinite;
-  filter: drop-shadow(0 10rpx 24rpx rgba(120, 90, 60, 0.35));
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1) rotate(-0.6deg); }
-  50% { transform: scale(1.035) rotate(0.6deg); }
-}
-
-/* 按下反馈：放大 + 发光 */
-.tree-pressed .tree-img {
-  transform: scale(1.12);
-  animation-play-state: paused;
-  filter: drop-shadow(0 0 36rpx rgba(255, 214, 130, 0.95));
-}
-
-.badge {
-  margin-top: 8rpx;
-  background: var(--color-gold);
-  color: #fff;
-  font-size: 24rpx;
-  padding: 10rpx 28rpx;
-  border-radius: 30rpx;
-  box-shadow: 0 6rpx 16rpx rgba(245, 185, 78, 0.45);
-  animation: bounce 1.6s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8rpx); }
-}
-
-.hint {
-  margin-top: 8rpx;
-  font-size: 24rpx;
-  color: #6b5a4e;
-  background: rgba(255, 252, 246, 0.82);
-  padding: 8rpx 26rpx;
-  border-radius: 24rpx;
-  box-shadow: 0 4rpx 14rpx rgba(120, 90, 60, 0.12);
+.heart-icon {
+  width: 40rpx;
 }
 
 .retry-box {

@@ -6,10 +6,10 @@
     "pages/card/card"
   ],
   "window": {
+    "navigationStyle": "custom",
     "navigationBarTextStyle": "black",
-    "navigationBarBackgroundColor": "#FFF6EF",
     "navigationBarTitleText": "茄茄小屋",
-    "backgroundColor": "#FFF6EF"
+    "backgroundColor": "#FBF3E4"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

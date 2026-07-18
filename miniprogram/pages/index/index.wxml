@@ -1,30 +1,60 @@
-<!--pages/index/index.wxml - 茄茄小屋主页-->
+<!--pages/index/index.wxml - 茄茄小屋主页（横向全景房间）-->
 <view class="page-loading" wx:if="{{loading}}">小屋开门中…</view>
 
 <view class="page-loading" wx:elif="{{loadFailed}}">
   <view class="retry-box">
     <text>小屋暂时打不开</text>
-    <view class="btn-ghost retry-btn" bindtap="onRetry">再试一次</view>
+    <view class="btn-ghost retry-btn" hover-class="btn-pressed" bindtap="onRetry">再试一次</view>
   </view>
 </view>
 
 <view class="home" wx:else>
-  <image class="room-bg" src="/assets/room-day.jpg" mode="aspectFill" />
-
-  <view class="header-chip">
-    <text class="title">茄茄小屋</text>
-    <text class="subtitle">在一起的第 {{daysTogether}} 天 💗</text>
-  </view>
-
-  <!-- 桌上的愿望树：呼吸动画提示可点击，按下有放大反馈 -->
-  <view
-    class="tree-hotspot"
-    hover-class="tree-pressed"
-    hover-stay-time="160"
-    bindtap="goTree"
+  <scroll-view
+    class="pano-scroll"
+    scroll-x
+    enhanced
+    bounces="{{false}}"
+    show-scrollbar="{{false}}"
+    scroll-left="{{scrollLeft}}"
   >
-    <image class="tree-img" src="/assets/tree-day.png" mode="widthFix" />
-    <view class="badge" wx:if="{{pendingForMe > 0}}">{{pendingForMe}} 颗果子等你回答</view>
-    <view class="hint" wx:else>点一点愿望树</view>
+    <view class="pano" style="width: {{panoWidth}}px; height: {{panoHeight}}px;">
+      <image class="pano-img" src="/assets/room-pano-day.jpg" />
+
+      <!-- 占位物件：平时隐形，按下柔光缓缓浮现，点击提示装修中 -->
+      <view
+        wx:for="{{placeholders}}"
+        wx:key="key"
+        class="hotspot"
+        hover-class="hotspot-hover"
+        hover-stay-time="250"
+        style="left: {{item.left}}%; top: {{item.top}}%; width: {{item.width}}%; height: {{item.height}}%;"
+        data-name="{{item.name}}"
+        bindtap="onTapPlaceholder"
+      >
+        <view class="glow"></view>
+      </view>
+
+      <!-- 愿望树：按下时金色柔光缓缓浮现 -->
+      <view
+        class="hotspot tree-hotspot"
+        hover-class="hotspot-hover"
+        hover-stay-time="250"
+        style="left: {{treeRect.left}}%; top: {{treeRect.top}}%; width: {{treeRect.width}}%; height: {{treeRect.height}}%;"
+        bindtap="goTree"
+      >
+        <view class="glow glow-gold"></view>
+        <view class="tree-dot" wx:if="{{pendingForMe > 0}}">{{pendingForMe}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="header-chip" style="top: {{chipTop}}px">
+    <image class="title-img" src="/assets/title.png" mode="widthFix" />
+    <view class="subtitle">
+      <text>在一起的第 {{daysTogether}} 天</text>
+      <image class="heart-icon" src="/assets/heart.png" mode="widthFix" />
+    </view>
   </view>
 </view>
+
+<paper-toast id="toast" />

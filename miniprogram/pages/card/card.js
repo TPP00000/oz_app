@@ -1,5 +1,6 @@
 // pages/card/card.js - 问答卡片页（出题 / 答题 / 回看）
 const api = require('../../utils/api')
+const ui = require('../../utils/ui')
 const presets = require('../../data/preset-questions')
 
 const QUESTION_MAX = 200
@@ -15,10 +16,12 @@ Page({
     suggestions: [],
     submitting: false,
     questionMax: QUESTION_MAX,
-    answerMax: ANSWER_MAX
+    answerMax: ANSWER_MAX,
+    safeTop: 20
   },
 
   onLoad(options) {
+    this.setData({ safeTop: ui.safeTop() })
     if (options.mode === 'create') {
       this.setData({ mode: 'create', suggestions: presets.pickRandom(3) })
       return
@@ -28,7 +31,7 @@ Page({
       this.loadCard(options.id)
       return
     }
-    wx.showToast({ title: '页面参数错误', icon: 'none' })
+    ui.toast(this, '页面参数错误')
     setTimeout(() => wx.navigateBack(), 1200)
   },
 
@@ -39,9 +42,12 @@ Page({
       if (card.status === 'pending') {
         mode = card.askedByMe ? 'waiting' : 'answer'
       }
-      this.setData({ card, mode })
+      this.setData({
+        card: { ...card, species: card.species || 'apple' },
+        mode
+      })
     } catch (err) {
-      api.showError(err)
+      ui.showError(this, err)
       setTimeout(() => wx.navigateBack(), 1500)
     }
   },
@@ -65,11 +71,11 @@ Page({
   async onSubmitQuestion() {
     const question = this.data.questionInput.trim()
     if (!question) {
-      wx.showToast({ title: '先写下你的问题吧', icon: 'none' })
+      ui.toast(this, '先写下你的问题吧')
       return
     }
     if (question.length > QUESTION_MAX) {
-      wx.showToast({ title: `问题最多 ${QUESTION_MAX} 字`, icon: 'none' })
+      ui.toast(this, `问题最多 ${QUESTION_MAX} 字`)
       return
     }
     await this.submit('card.create', { question }, '种下啦，等 TA 来回答 🌱')
@@ -78,11 +84,11 @@ Page({
   async onSubmitAnswer() {
     const answer = this.data.answerInput.trim()
     if (!answer) {
-      wx.showToast({ title: '写点什么再交卷吧', icon: 'none' })
+      ui.toast(this, '写点什么再交卷吧')
       return
     }
     if (answer.length > ANSWER_MAX) {
-      wx.showToast({ title: `回答最多 ${ANSWER_MAX} 字`, icon: 'none' })
+      ui.toast(this, `回答最多 ${ANSWER_MAX} 字`)
       return
     }
     await this.submit(
@@ -99,10 +105,10 @@ Page({
     this.setData({ submitting: true })
     try {
       await api.call(action, payload)
-      wx.showToast({ title: successMsg, icon: 'none' })
+      ui.toast(this, successMsg)
       setTimeout(() => wx.navigateBack(), 1200)
     } catch (err) {
-      api.showError(err)
+      ui.showError(this, err)
       this.setData({ submitting: false })
     }
   }

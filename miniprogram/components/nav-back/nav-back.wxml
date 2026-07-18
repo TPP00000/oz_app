@@ -1,0 +1,8 @@
+<view
+  class="nav-back"
+  style="top: {{top}}px"
+  hover-class="nav-back-pressed"
+  bindtap="onBack"
+>
+  <text class="arrow">‹</text>
+</view>

@@ -1,10 +1,11 @@
 <!--pages/card/card.wxml - 问答卡片页-->
 <image class="page-bg" src="/assets/card-paper.jpg" mode="aspectFill" />
+<nav-back />
 
 <view class="page-loading" wx:if="{{mode === 'loading'}}">果子打开中…</view>
 
 <!-- 出题模式 -->
-<view class="card-page" wx:elif="{{mode === 'create'}}">
+<view class="card-page" style="padding-top: {{safeTop + 60}}px" wx:elif="{{mode === 'create'}}">
   <view class="head">
     <text class="head-emoji">🌱</text>
     <text class="head-title">种一个问题</text>
@@ -36,13 +37,13 @@
     >{{item}}</view>
   </view>
 
-  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" bindtap="onSubmitQuestion">
+  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" hover-class="btn-pressed" bindtap="onSubmitQuestion">
     {{submitting ? '种植中…' : '种到树上去'}}
   </view>
 </view>
 
 <!-- 答题模式 -->
-<view class="card-page" wx:elif="{{mode === 'answer'}}">
+<view class="card-page" style="padding-top: {{safeTop + 60}}px" wx:elif="{{mode === 'answer'}}">
   <view class="head">
     <image class="head-fruit fruit-glow" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
     <text class="head-title">TA 想问你</text>
@@ -64,13 +65,13 @@
     <text class="counter">{{answerInput.length}}/{{answerMax}}</text>
   </view>
 
-  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" bindtap="onSubmitAnswer">
+  <view class="btn-primary submit {{submitting ? 'disabled' : ''}}" hover-class="btn-pressed" bindtap="onSubmitAnswer">
     {{submitting ? '提交中…' : '交给 TA'}}
   </view>
 </view>
 
 <!-- 等待模式：我出的题，TA 还没答 -->
-<view class="card-page" wx:elif="{{mode === 'waiting'}}">
+<view class="card-page" style="padding-top: {{safeTop + 60}}px" wx:elif="{{mode === 'waiting'}}">
   <view class="head">
     <image class="head-fruit fruit-unripe" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
     <text class="head-title">果子还在长大</text>
@@ -83,7 +84,7 @@
 </view>
 
 <!-- 回看模式：已完成的问答 -->
-<view class="card-page" wx:elif="{{mode === 'view'}}">
+<view class="card-page" style="padding-top: {{safeTop + 60}}px" wx:elif="{{mode === 'view'}}">
   <view class="head">
     <image class="head-fruit" src="/assets/fruit-{{card.species}}.png" mode="widthFix" />
     <text class="head-title">成熟的果子</text>
@@ -97,3 +98,5 @@
     <text class="bubble-text">{{card.answer}}</text>
   </view>
 </view>
+
+<paper-toast id="toast" />
